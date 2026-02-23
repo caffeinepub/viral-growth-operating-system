@@ -105,6 +105,7 @@ export interface backendInterface {
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     checkUserTier(): Promise<FeatureSet>;
     createCheckoutSession(items: Array<ShoppingItem>, successUrl: string, cancelUrl: string): Promise<string>;
+    createStripeCheckoutSession(tier: TierLevel, successUrl: string, cancelUrl: string): Promise<string>;
     generateCalendar(request: ContentGenerationRequest): Promise<string>;
     generateCaptions(request: ContentGenerationRequest): Promise<Array<string>>;
     generateHooks(request: ContentGenerationRequest): Promise<Array<string>>;

@@ -17,7 +17,7 @@ import type { ContentGenerationRequest } from '../backend';
 export default function ContentGenerator() {
   const navigate = useNavigate();
   const { identity } = useInternetIdentity();
-  const { data: featureSet } = useCheckUserTier();
+  const { data: featureSet, isLoading: featureLoading } = useCheckUserTier();
   const addRequest = useAddContentRequest();
   const generateContent = useGenerateContent();
 
@@ -56,7 +56,12 @@ export default function ContentGenerator() {
       setGeneratedContent(content);
       toast.success('Content generated successfully!');
     } catch (error: any) {
-      toast.error(error.message || 'Failed to generate content');
+      // Handle tier restriction errors gracefully
+      if (error.message?.includes('subscription tier') || error.message?.includes('does not include')) {
+        toast.error('This feature requires a higher subscription tier. Please upgrade to continue.');
+      } else {
+        toast.error(error.message || 'Failed to generate content');
+      }
       console.error(error);
     }
   };
@@ -171,7 +176,7 @@ export default function ContentGenerator() {
                 type="submit"
                 size="lg"
                 className="w-full bg-gradient-to-r from-chart-1 to-chart-2"
-                disabled={isLoading}
+                disabled={isLoading || featureLoading}
               >
                 {isLoading ? (
                   <>

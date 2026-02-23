@@ -1,44 +1,79 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-23T01:53:35.882Z",
+  "generatedAt": "2026-02-23T02:12:12.330Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 2,
-    "implemented": 1,
+    "total": 4,
+    "implemented": 2,
     "items": [
       {
-        "id": "REQ-35",
-        "summary": "Store the Stripe publishable key 'pk_test_51SqMs35XIYyFCA6UuZ8GXNAzRZsqbfQp5BF04WIUWga5yUnsQENDd9uMjCN4qf2JxULjQfTkueFMVnyIBQB6GtFo00JaLPSbs1' and secret key 'sk_test_51SqMs35XIYyFCA6UWJR2oA59uinQ364YwSTGN0nD9K6Fuv5skkELENbTdpqlxeKb9m91nHaZf8DgIN2JMpofVpoh004N8ftZJN' in the backend Stripe configuration using the existing setStripeConfig function",
+        "id": "REQ-37",
+        "summary": "Create Stripe subscription products in the Stripe dashboard with two products: 'Pro Tier' and 'Elite Tier', each with a monthly recurring price",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/docs/STRIPE_SETUP.md"
+        ],
+        "matchedFiles": [
+          "frontend/docs/STRIPE_SETUP.md"
+        ]
+      },
+      {
+        "id": "REQ-38",
+        "summary": "Update the backend createStripeCheckoutSession function to use real Stripe price IDs for Pro and Elite tiers instead of placeholder values, mapping 'Pro' tier to the Pro monthly price ID and 'Elite' tier to the Elite monthly price ID",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
       },
       {
-        "id": "REQ-36",
-        "summary": "Update the frontend StripeSetup page to automatically detect when Stripe configuration has been successfully stored and display a confirmation message with the configured publishable key",
+        "id": "REQ-39",
+        "summary": "Verify the Stripe webhook handler correctly processes checkout.session.completed events to upgrade user subscription tier from Free to Pro or Elite based on the price ID in the completed checkout session",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-40",
+        "summary": "Test the end-to-end subscription flow: user clicks upgrade on pricing page, completes Stripe checkout, webhook processes payment, user tier is upgraded, and Pro/Elite features become accessible in the dashboard and content generator",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/StripeSetup.tsx",
-          "frontend/src/hooks/useQueries.ts"
+          "frontend/src/pages/PricingPage.tsx",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/pages/PaymentSuccess.tsx",
+          "frontend/src/pages/SubscriptionManagement.tsx",
+          "frontend/src/pages/Dashboard.tsx",
+          "frontend/src/components/ContentOutput.tsx",
+          "frontend/src/pages/ContentGenerator.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/StripeSetup.tsx"
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/pages/PaymentSuccess.tsx",
+          "frontend/src/pages/SubscriptionManagement.tsx",
+          "frontend/src/pages/Dashboard.tsx",
+          "frontend/src/pages/ContentGenerator.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
     "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/pages/StripeSetup.tsx",
+    "frontend/docs/STRIPE_SETUP.md",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/pages/ContentGenerator.tsx",
+    "frontend/src/pages/Dashboard.tsx",
+    "frontend/src/pages/PaymentSuccess.tsx",
+    "frontend/src/pages/SubscriptionManagement.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

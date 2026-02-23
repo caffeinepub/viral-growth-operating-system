@@ -10,8 +10,9 @@ export default function PaymentSuccess() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    // Clear subscription cache to refetch updated tier
+    // Invalidate subscription and feature set queries to refetch updated tier data
     queryClient.invalidateQueries({ queryKey: ['subscription'] });
+    queryClient.invalidateQueries({ queryKey: ['featureSet'] });
   }, [queryClient]);
 
   return (
@@ -24,12 +25,12 @@ export default function PaymentSuccess() {
             </div>
             <CardTitle className="text-2xl">Payment Successful!</CardTitle>
             <CardDescription>
-              Your subscription has been activated
+              Your subscription has been activated and features are now unlocked
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-muted-foreground">
-              Thank you for upgrading! You now have access to all the features of your new plan.
+              Thank you for upgrading! You now have immediate access to all the features of your new plan. Start creating viral content right away.
             </p>
             <div className="flex flex-col gap-3">
               <Button

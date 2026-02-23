@@ -90,6 +90,10 @@ export interface _SERVICE {
     [Array<ShoppingItem>, string, string],
     string
   >,
+  'createStripeCheckoutSession' : ActorMethod<
+    [TierLevel, string, string],
+    string
+  >,
   'generateCalendar' : ActorMethod<[ContentGenerationRequest], string>,
   'generateCaptions' : ActorMethod<[ContentGenerationRequest], Array<string>>,
   'generateHooks' : ActorMethod<[ContentGenerationRequest], Array<string>>,

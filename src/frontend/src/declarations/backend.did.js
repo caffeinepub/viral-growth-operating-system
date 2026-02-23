@@ -39,6 +39,11 @@ export const ShoppingItem = IDL.Record({
   'priceInCents' : IDL.Nat,
   'productDescription' : IDL.Text,
 });
+export const TierLevel = IDL.Variant({
+  'pro' : IDL.Null,
+  'free' : IDL.Null,
+  'elite' : IDL.Null,
+});
 export const BrandVoiceProfile = IDL.Record({
   'personality' : IDL.Text,
   'tone' : IDL.Text,
@@ -52,11 +57,6 @@ export const SubscriptionStatus = IDL.Variant({
   'active' : IDL.Null,
   'cancelled' : IDL.Null,
   'pending' : IDL.Null,
-});
-export const TierLevel = IDL.Variant({
-  'pro' : IDL.Null,
-  'free' : IDL.Null,
-  'elite' : IDL.Null,
 });
 export const UserSubscription = IDL.Record({
   'status' : SubscriptionStatus,
@@ -104,6 +104,11 @@ export const idlService = IDL.Service({
   'checkUserTier' : IDL.Func([], [FeatureSet], ['query']),
   'createCheckoutSession' : IDL.Func(
       [IDL.Vec(ShoppingItem), IDL.Text, IDL.Text],
+      [IDL.Text],
+      [],
+    ),
+  'createStripeCheckoutSession' : IDL.Func(
+      [TierLevel, IDL.Text, IDL.Text],
       [IDL.Text],
       [],
     ),
@@ -199,6 +204,11 @@ export const idlFactory = ({ IDL }) => {
     'priceInCents' : IDL.Nat,
     'productDescription' : IDL.Text,
   });
+  const TierLevel = IDL.Variant({
+    'pro' : IDL.Null,
+    'free' : IDL.Null,
+    'elite' : IDL.Null,
+  });
   const BrandVoiceProfile = IDL.Record({
     'personality' : IDL.Text,
     'tone' : IDL.Text,
@@ -209,11 +219,6 @@ export const idlFactory = ({ IDL }) => {
     'active' : IDL.Null,
     'cancelled' : IDL.Null,
     'pending' : IDL.Null,
-  });
-  const TierLevel = IDL.Variant({
-    'pro' : IDL.Null,
-    'free' : IDL.Null,
-    'elite' : IDL.Null,
   });
   const UserSubscription = IDL.Record({
     'status' : SubscriptionStatus,
@@ -258,6 +263,11 @@ export const idlFactory = ({ IDL }) => {
     'checkUserTier' : IDL.Func([], [FeatureSet], ['query']),
     'createCheckoutSession' : IDL.Func(
         [IDL.Vec(ShoppingItem), IDL.Text, IDL.Text],
+        [IDL.Text],
+        [],
+      ),
+    'createStripeCheckoutSession' : IDL.Func(
+        [TierLevel, IDL.Text, IDL.Text],
         [IDL.Text],
         [],
       ),

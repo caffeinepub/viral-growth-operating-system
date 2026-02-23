@@ -1,54 +1,89 @@
 {
   "kind": "build_request",
-  "title": "Configure Stripe API keys for payment integration",
+  "title": "Configure Stripe products and integrate price IDs into checkout flow",
   "projectName": "Viral Growth Operating System",
   "priority": "high",
   "requirements": [
     {
-      "id": "REQ-35",
-      "text": "Store the Stripe publishable key 'pk_test_51SqMs35XIYyFCA6UuZ8GXNAzRZsqbfQp5BF04WIUWga5yUnsQENDd9uMjCN4qf2JxULjQfTkueFMVnyIBQB6GtFo00JaLPSbs1' and secret key 'sk_test_51SqMs35XIYyFCA6UWJR2oA59uinQ364YwSTGN0nD9K6Fuv5skkELENbTdpqlxeKb9m91nHaZf8DgIN2JMpofVpoh004N8ftZJN' in the backend Stripe configuration using the existing setStripeConfig function",
-      "target": "backend",
+      "id": "REQ-37",
+      "text": "Create Stripe subscription products in the Stripe dashboard with two products: 'Pro Tier' and 'Elite Tier', each with a monthly recurring price",
+      "target": "unknown",
       "source": {
         "messageIds": [
-          "msg-5"
-        ],
-        "quotes": [
-          "pk_test_51SqMs35XIYyFCA6UuZ8GXNAzRZsqbfQp5BF04WIUWga5yUnsQENDd9uMjCN4qf2JxULjQfTkueFMVnyIBQB6GtFo00JaLPSbs1.         sk_test_51SqMs35XIYyFCA6UWJR2oA59uinQ364YwSTGN0nD9K6Fuv5skkELENbTdpqlxeKb9m91nHaZf8DgIN2JMpofVpoh004N8ftZJN"
+          "msg-assistant-money",
+          "msg-user-setup"
         ]
       },
       "acceptanceCriteria": [
-        "The backend stores the publishable key 'pk_test_51SqMs35XIYyFCA6UuZ8GXNAzRZsqbfQp5BF04WIUWga5yUnsQENDd9uMjCN4qf2JxULjQfTkueFMVnyIBQB6GtFo00JaLPSbs1' in stripeConfig",
-        "The backend stores the secret key 'sk_test_51SqMs35XIYyFCA6UWJR2oA59uinQ364YwSTGN0nD9K6Fuv5skkELENbTdpqlxeKb9m91nHaZf8DgIN2JMpofVpoh004N8ftZJN' in stripeConfig",
-        "The getStripePublishableKey function returns the stored publishable key when called",
-        "The Stripe checkout and customer portal functions can use the stored secret key for API calls"
+        "Two subscription products exist in Stripe dashboard: Pro Tier and Elite Tier",
+        "Each product has a monthly recurring price configured",
+        "Price IDs are generated and available for backend integration"
       ]
     },
     {
-      "id": "REQ-36",
-      "text": "Update the frontend StripeSetup page to automatically detect when Stripe configuration has been successfully stored and display a confirmation message with the configured publishable key",
-      "target": "frontend",
+      "id": "REQ-38",
+      "text": "Update the backend createStripeCheckoutSession function to use real Stripe price IDs for Pro and Elite tiers instead of placeholder values, mapping 'Pro' tier to the Pro monthly price ID and 'Elite' tier to the Elite monthly price ID",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-5"
+          "msg-assistant-money",
+          "msg-user-setup"
         ]
       },
       "acceptanceCriteria": [
-        "The StripeSetup page queries the backend to check if Stripe is already configured",
-        "When configuration exists, display a success message showing the publishable key in use",
-        "Provide visual confirmation that payment integration is active",
-        "Allow updating the configuration if needed"
+        "Backend checkout function accepts tier parameter and maps to correct Stripe price ID",
+        "Pro tier checkout creates session with Pro monthly price ID",
+        "Elite tier checkout creates session with Elite monthly price ID",
+        "Checkout sessions are created with the correct recurring price configuration"
+      ]
+    },
+    {
+      "id": "REQ-39",
+      "text": "Verify the Stripe webhook handler correctly processes checkout.session.completed events to upgrade user subscription tier from Free to Pro or Elite based on the price ID in the completed checkout session",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-assistant-money",
+          "msg-user-setup"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Webhook handler successfully receives checkout.session.completed events",
+        "User subscription tier is updated in backend when payment completes",
+        "Tier upgrade is correctly mapped from Stripe price ID to user tier (Pro or Elite)",
+        "Feature access is immediately available after successful payment"
+      ]
+    },
+    {
+      "id": "REQ-40",
+      "text": "Test the end-to-end subscription flow: user clicks upgrade on pricing page, completes Stripe checkout, webhook processes payment, user tier is upgraded, and Pro/Elite features become accessible in the dashboard and content generator",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-assistant-money",
+          "msg-user-setup"
+        ]
+      },
+      "acceptanceCriteria": [
+        "User can initiate checkout from PricingPage for Pro or Elite tier",
+        "Stripe checkout page displays correct price and product details",
+        "After successful payment, user is redirected to payment success page",
+        "User subscription tier reflects the purchased tier in SubscriptionManagement page",
+        "Previously locked Pro or Elite features are now accessible without upgrade prompts"
       ]
     }
   ],
   "constraints": [
-    "Use the existing setStripeConfig backend function without modifying the Stripe configuration data structure",
-    "Do not store Stripe keys in frontend code or expose the secret key in any frontend API responses",
-    "Maintain single-actor architecture in backend/main.mo"
+    "Use the existing Stripe API keys already stored in backend configuration: publishable key 'pk_test_51SqMs35XIYyFCA6UuZ8GXNAzRZsqbfQp5BF04WIUWga5yUnsQENDd9uMjCN4qf2JxULjQfTkueFMVnyIBQB6GtFo00JaLPSbs1' and secret key 'sk_test_51SqMs35XIYyFCA6UWJR2oA59uinQ364YwSTGN0nD9K6Fuv5skkELENbTdpqlxeKb9m91nHaZf8DgIN2JMpofVpoh004N8ftZJN'",
+    "Do not modify the existing Stripe configuration storage or setup flow",
+    "Maintain single-actor backend architecture with all logic in main.mo",
+    "Do not edit immutable frontend paths including useInternetIdentity, useActor, main.tsx, or components/ui"
   ],
   "nonGoals": [
-    "Creating new Stripe configuration endpoints or data models",
-    "Modifying the existing Stripe checkout or webhook handling logic",
-    "Adding webhook signing secret (not provided in user message)"
+    "Creating new payment provider integrations beyond Stripe",
+    "Modifying the existing subscription tier structure (Free/Pro/Elite)",
+    "Adding new subscription features or content generation capabilities",
+    "Changing the existing authentication flow or Internet Identity integration"
   ],
   "imageRequirements": {
     "required": [],

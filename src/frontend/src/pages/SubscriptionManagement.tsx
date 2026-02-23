@@ -6,13 +6,23 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Sparkles, CreditCard, ArrowUpCircle, ExternalLink } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function SubscriptionManagement() {
   const navigate = useNavigate();
   const { identity } = useInternetIdentity();
+  const queryClient = useQueryClient();
   const { data: subscription, isLoading } = useGetMySubscription();
 
   const isAuthenticated = !!identity;
+
+  // Refetch subscription on mount to ensure latest data
+  useEffect(() => {
+    if (isAuthenticated) {
+      queryClient.invalidateQueries({ queryKey: ['subscription'] });
+    }
+  }, [isAuthenticated, queryClient]);
 
   if (!isAuthenticated) {
     return (

@@ -1,27 +1,69 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Configure Stripe API keys for payment integration",
+  "title": "Configure Stripe products and integrate price IDs into checkout flow",
   "requirements": [
     {
-      "id": "REQ-36",
-      "summary": "Update the StripeSetup page to detect and display successful Stripe configuration",
+      "id": "REQ-37",
+      "summary": "Document Stripe product setup instructions for Pro and Elite tiers with monthly recurring prices",
       "acceptanceCriteria": [
-        "The StripeSetup page queries the backend to check if Stripe is already configured",
-        "When configuration exists, display a success message showing the publishable key in use",
-        "Provide visual confirmation that payment integration is active",
-        "Allow updating the configuration if needed"
+        "Two subscription products exist in Stripe dashboard: Pro Tier and Elite Tier",
+        "Each product has a monthly recurring price configured",
+        "Price IDs are generated and available for backend integration"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/StripeSetup.tsx",
+          "path": "frontend/docs/STRIPE_SETUP.md",
+          "operation": "create",
+          "description": "Create documentation file with step-by-step instructions for creating Pro Tier and Elite Tier subscription products in the Stripe dashboard. Include guidance on setting monthly recurring prices, generating price IDs, and where to store those IDs for backend integration. This is a manual setup task that must be completed in the Stripe dashboard before the backend integration can work."
+        }
+      ]
+    },
+    {
+      "id": "REQ-40",
+      "summary": "Verify and enhance end-to-end subscription flow from pricing page through checkout to upgraded dashboard access",
+      "acceptanceCriteria": [
+        "User can initiate checkout from PricingPage for Pro or Elite tier",
+        "Stripe checkout page displays correct price and product details",
+        "After successful payment, user is redirected to payment success page",
+        "User subscription tier reflects the purchased tier in SubscriptionManagement page",
+        "Previously locked Pro or Elite features are now accessible without upgrade prompts"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/PricingPage.tsx",
           "operation": "modify",
-          "description": "Add logic to detect when Stripe configuration exists by calling isStripeConfigured() on component mount. When configured, display a success confirmation message indicating that Stripe is active. Extract and display the publishable key from the stored configuration (derived from the secret key field or retrieved via a dedicated query if available). Add UI to allow admins to update the configuration if needed. Maintain admin-only access control and form validation for configuration updates."
+          "description": "Review the existing Stripe checkout integration to ensure the tier parameter (TierLevel.pro or TierLevel.elite) is correctly passed to useCreateStripeCheckoutSession. Verify error handling displays user-friendly messages when checkout fails. Ensure the success and cancel URLs are correctly constructed. Add loading states during checkout session creation to prevent duplicate clicks."
         },
         {
           "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Add a React Query hook useIsStripeConfigured() that calls the backend isStripeConfigured() method to check configuration status. Ensure the hook is enabled only when the actor is available and properly handles loading and error states. This hook will be used by the StripeSetup page to determine whether to show the configuration form or the success confirmation message."
+          "description": "Review the useCreateStripeCheckoutSession hook to ensure it correctly calls actor.createStripeCheckoutSession with the tier parameter, success URL, and cancel URL. Verify JSON parsing of the checkout session response and proper error handling when the session URL is missing. Ensure window.location.href redirect is used (not router navigation) to navigate to the Stripe-hosted checkout page."
+        },
+        {
+          "path": "frontend/src/pages/PaymentSuccess.tsx",
+          "operation": "modify",
+          "description": "Enhance the payment success page to immediately invalidate the subscription query cache using queryClient.invalidateQueries for 'mySubscription' and 'featureSet' to trigger refetch of updated tier data. Add a confirmation message indicating the subscription upgrade was successful and features are now unlocked. Provide clear navigation buttons to dashboard and content generator."
+        },
+        {
+          "path": "frontend/src/pages/SubscriptionManagement.tsx",
+          "operation": "modify",
+          "description": "Verify the subscription management page correctly displays the user's current tier (Free/Pro/Elite) by fetching data with useGetMySubscription. Ensure the tier badge and feature list reflect the upgraded tier immediately after successful payment. If the subscription query is stale after payment, add logic to refetch on page mount."
+        },
+        {
+          "path": "frontend/src/pages/Dashboard.tsx",
+          "operation": "modify",
+          "description": "Review the dashboard to ensure it correctly reflects the user's subscription tier from useGetMySubscription and displays appropriate feature limits. Verify that after a successful upgrade, the dashboard shows the new tier's features without requiring a page refresh or re-login."
+        },
+        {
+          "path": "frontend/src/components/ContentOutput.tsx",
+          "operation": "modify",
+          "description": "Verify that the tier-based feature gating logic correctly uses the useCheckUserTier hook to determine which features to unlock. Ensure that Pro and Elite features display generated content instead of UpgradePrompt components after the user's tier is upgraded. Test that the feature set updates immediately after payment without requiring manual refresh."
+        },
+        {
+          "path": "frontend/src/pages/ContentGenerator.tsx",
+          "operation": "modify",
+          "description": "Review the content generator page to ensure that after a successful subscription upgrade, Pro or Elite users can access advanced generation features without hitting tier restriction errors. Verify that tier checks are performed before content generation and display appropriate error messages if the backend restricts access."
         }
       ]
     }

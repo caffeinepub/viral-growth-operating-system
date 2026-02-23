@@ -1,12 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Configure Stripe API keys in the backend and update the frontend to display confirmation when Stripe is configured.
+**Goal:** Configure Stripe products and integrate real price IDs into the checkout flow to enable Pro and Elite subscription purchases.
 
 **Planned changes:**
-- Store Stripe publishable and secret keys in the backend using the existing setStripeConfig function
-- Update the StripeSetup page to detect existing Stripe configuration and display confirmation message with the publishable key
-- Add visual confirmation that payment integration is active
-- Allow updating the configuration if needed
+- Create two Stripe subscription products (Pro Tier and Elite Tier) in Stripe dashboard with monthly recurring prices
+- Update backend createStripeCheckoutSession function to map Pro and Elite tiers to their respective Stripe price IDs
+- Verify webhook handler correctly processes checkout.session.completed events and upgrades user tier based on price ID
+- Test end-to-end subscription flow from pricing page through checkout to feature access
 
-**User-visible outcome:** Users will see automatic confirmation on the StripeSetup page that Stripe is configured, showing the publishable key in use, and will be able to update the configuration if needed.
+**User-visible outcome:** Users can purchase Pro or Elite subscriptions through Stripe checkout, and their subscription tier is automatically upgraded after payment, unlocking premium features in the dashboard and content generator.

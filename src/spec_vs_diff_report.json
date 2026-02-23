@@ -1,57 +1,51 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-23T01:53:35.879Z",
-  "summary": "The implementation successfully addresses both requirements. REQ-35 is fully implemented with the Stripe secret key hardcoded in backend/main.mo and backend/migration.mo. REQ-36 is partially implemented with automatic configuration detection and visual confirmation, but lacks the specific publishable key value requested in the BuildRequest.",
+  "generatedAt": "2026-02-23T02:12:12.327Z",
+  "summary": "The diff implements Stripe product configuration documentation and updates the backend with real Stripe price IDs for Pro and Elite tiers. The checkout flow now maps tier parameters to specific price IDs, and the webhook handler processes checkout.session.completed events to upgrade user tiers. Frontend components refetch subscription data after payment to ensure immediate feature access. However, REQ-37 (creating actual Stripe products in dashboard) is documented but not directly implemented, and REQ-40 (end-to-end testing) is enabled by the code changes but not evidenced as performed.",
   "missing_requirements": [
     {
-      "id": "REQ-35",
-      "requirement": "Store the Stripe publishable key 'pk_test_51SqMs35XIYyFCA6UuZ8GXNAzRZsqbfQp5BF04WIUWga5yUnsQENDd9uMjCN4qf2JxULjQfTkueFMVnyIBQB6GtFo00JaLPSbs1' in the backend Stripe configuration",
-      "reason": "The publishable key is not stored in the backend stripeConfig. The StripeConfiguration type only has secretKey and allowedCountries fields. The backend does not store or expose the publishable key at all.",
+      "id": "REQ-37",
+      "requirement": "Create Stripe subscription products in the Stripe dashboard with two products: 'Pro Tier' and 'Elite Tier', each with a monthly recurring price",
+      "reason": "The BuildRequest requires actual products to be created in the Stripe dashboard. While STRIPE_SETUP.md provides comprehensive instructions for creating these products, the diff shows no evidence that the products were actually created in the Stripe dashboard. The documentation is a guide, not implementation.",
       "evidence": [
-        "backend/main.mo"
+        "frontend/docs/STRIPE_SETUP.md"
       ]
     },
     {
-      "id": "REQ-35",
-      "requirement": "The getStripePublishableKey function returns the stored publishable key when called",
-      "reason": "No getStripePublishableKey function exists in the backend implementation. The diff shows no such function was added.",
-      "evidence": [
-        "backend/main.mo"
-      ]
-    },
-    {
-      "id": "REQ-36",
-      "requirement": "Display a success message showing the publishable key in use",
-      "reason": "The frontend displays 'pk_test_51SqMs35XIYyFCA6U...' (a truncated hint) rather than the actual publishable key 'pk_test_51SqMs35XIYyFCA6UuZ8GXNAzRZsqbfQp5BF04WIUWga5yUnsQENDd9uMjCN4qf2JxULjQfTkueFMVnyIBQB6GtFo00JaLPSbs1'. The actual key is not retrieved from the backend or displayed.",
-      "evidence": [
-        "frontend/src/pages/StripeSetup.tsx"
-      ]
+      "id": "REQ-40",
+      "requirement": "Test the end-to-end subscription flow: user clicks upgrade on pricing page, completes Stripe checkout, webhook processes payment, user tier is upgraded, and Pro/Elite features become accessible",
+      "reason": "No test files, test results, or evidence of manual testing execution are present in the diff. While the code changes enable the flow to be tested, there is no evidence that the testing was actually performed.",
+      "evidence": []
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Backend hardcodes the Stripe secret key directly in code instead of using setStripeConfig function",
-      "reason": "The BuildRequest explicitly states to 'Use the existing setStripeConfig backend function' to store keys. However, the implementation hardcodes the secret key in stripeConfig variable initialization and migration.mo, not via setStripeConfig function call.",
+      "description": "Admin-only Stripe Setup page referenced in navigation and routing",
+      "reason": "The diff includes references to a Stripe Setup page in Layout.tsx and App.tsx route configuration, but this page creation was not requested in the BuildRequest. The BuildRequest explicitly states 'Do not modify the existing Stripe configuration storage or setup flow'.",
       "evidence": [
-        "backend/main.mo",
-        "backend/migration.mo"
+        "frontend/src/components/Layout.tsx",
+        "frontend-file-summaries.txt"
       ]
     },
     {
-      "description": "Frontend form allows editing Stripe configuration",
-      "reason": "The StripeSetup page includes a full configuration form with secretKey input, country configuration, and validation logic. The BuildRequest states 'Use the existing setStripeConfig backend function' which suggests calling it programmatically, not building a UI form. Non-goals explicitly state 'Creating new Stripe configuration endpoints or data models'.",
+      "description": "Stripe customer portal link in SubscriptionManagement page",
+      "reason": "The handleManageBilling function opens a hardcoded Stripe customer portal URL. This external billing portal integration was not requested in the BuildRequest.",
       "evidence": [
-        "frontend/src/pages/StripeSetup.tsx"
+        "frontend/src/pages/SubscriptionManagement.tsx"
       ]
     }
   ],
   "confidence": 0.85,
   "changed_files": [
     "backend/main.mo",
-    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/pages/StripeSetup.tsx",
+    "frontend/docs/STRIPE_SETUP.md",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/pages/ContentGenerator.tsx",
+    "frontend/src/pages/Dashboard.tsx",
+    "frontend/src/pages/PaymentSuccess.tsx",
+    "frontend/src/pages/SubscriptionManagement.tsx",
     "project_state.json"
   ]
 }

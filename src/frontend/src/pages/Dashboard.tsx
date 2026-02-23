@@ -6,14 +6,25 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Sparkles, Plus, Clock, TrendingUp } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const { identity } = useInternetIdentity();
+  const queryClient = useQueryClient();
   const { data: subscription, isLoading: subLoading } = useGetMySubscription();
   const { data: contentRequests, isLoading: requestsLoading } = useGetContentRequests();
 
   const isAuthenticated = !!identity;
+
+  // Refetch subscription on mount to ensure latest tier data
+  useEffect(() => {
+    if (isAuthenticated) {
+      queryClient.invalidateQueries({ queryKey: ['subscription'] });
+      queryClient.invalidateQueries({ queryKey: ['featureSet'] });
+    }
+  }, [isAuthenticated, queryClient]);
 
   if (!isAuthenticated) {
     return (

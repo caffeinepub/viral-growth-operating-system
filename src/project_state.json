@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 7,
+  "projectStateVersion": 9,
   "summary": "AI-powered SaaS platform for short-form content creators - generates original, monetization-ready, algorithm-optimized content strategies with tiered subscription access (Free, Pro, Elite). Features trend analysis, brand voice memory, content scoring, and revenue optimization while maintaining strict copyright compliance.",
   "architectural_notes": [
     "Tiered access control system required: Free (3 hooks only), Pro (hooks/scripts/captions/hashtags/1 monetization angle), Elite (full suite + calendar + roadmap)",
@@ -89,6 +89,22 @@
       "title": "Update the frontend StripeSetup page to automatically detect when Stripe configuration has been successfully stored and display a confirmation message with the configured publishable key",
       "reqIds": [
         "REQ-36"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-stripe-subscription-products-in-the-stripe-dashboard-with-two-products-pro-tier-and-elite-tier-each-with-a-monthly-recurring-price",
+      "title": "Create Stripe subscription products in the Stripe dashboard with two products: 'Pro Tier' and 'Elite Tier', each with a monthly recurring price",
+      "reqIds": [
+        "REQ-37"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-test-the-end-to-end-subscription-flow-user-clicks-upgrade-on-pricing-page-completes-stripe-checkout-webhook-processes-payment-user-tier-is-upgraded-and-pro-elite-features-become-accessible-in-the-dashboard-and-content-generator",
+      "title": "Test the end-to-end subscription flow: user clicks upgrade on pricing page, completes Stripe checkout, webhook processes payment, user tier is upgraded, and Pro/Elite features become accessible in the dashboard and content generator",
+      "reqIds": [
+        "REQ-40"
       ],
       "version": 1
     }
@@ -347,6 +363,28 @@
       "summary": "Store the Stripe publishable key 'pk_test_51SqMs35XIYyFCA6UuZ8GXNAzRZsqbfQp5BF04WIUWga5yUnsQENDd9uMjCN4qf2JxULjQfTkueFMVnyIBQB6GtFo00JaLPSbs1' and secret key 'sk_test_51SqMs35XIYyFCA6UWJR2oA59uinQ364YwSTGN0nD9K6Fuv5skkELENbTdpqlxeKb9m91nHaZf8DgIN2JMpofVpoh004N8ftZJN' in the backend Stripe configuration using the existing setStripeConfig function",
       "reqIds": [
         "REQ-35"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-42",
+      "summary": "Create and configure Stripe subscription products and price IDs for Pro and Elite tiers in Stripe dashboard, then integrate these price IDs into the backend checkout flow to enable real subscription payments",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-44",
+      "summary": "Update the backend createStripeCheckoutSession function to use real Stripe price IDs for Pro and Elite tiers instead of placeholder values, mapping 'Pro' tier to the Pro monthly price ID and 'Elite' tier to the Elite monthly price ID",
+      "reqIds": [
+        "REQ-38"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-45",
+      "summary": "Verify the Stripe webhook handler correctly processes checkout.session.completed events to upgrade user subscription tier from Free to Pro or Elite based on the price ID in the completed checkout session",
+      "reqIds": [
+        "REQ-39"
       ],
       "status": "pending"
     }

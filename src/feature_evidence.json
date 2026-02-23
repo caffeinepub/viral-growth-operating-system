@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-frontend-stripesetup-page-to-automatically-detect-when-stripe-configuration-has-been-successfully-stored-and-display-a-confirmation-message-with-the-configured-publishable-key",
-      "featureTitle": "Update the frontend StripeSetup page to automatically detect when Stripe configuration has been successfully stored and display a confirmation message with the configured publishable key",
+      "featureId": "feature-create-stripe-subscription-products-in-the-stripe-dashboard-with-two-products-pro-tier-and-elite-tier-each-with-a-monthly-recurring-price",
+      "featureTitle": "Create Stripe subscription products in the Stripe dashboard with two products: 'Pro Tier' and 'Elite Tier', each with a monthly recurring price",
       "files": [
-        "frontend/src/pages/StripeSetup.tsx"
+        "frontend/docs/STRIPE_SETUP.md"
       ],
       "components": [
         "authorization@4.0.0",
@@ -18,7 +18,32 @@
         "http-outcalls@3.0.0"
       ],
       "testIds": [
-        "REQ-36"
+        "REQ-37"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-test-the-end-to-end-subscription-flow-user-clicks-upgrade-on-pricing-page-completes-stripe-checkout-webhook-processes-payment-user-tier-is-upgraded-and-pro-elite-features-become-accessible-in-the-dashboard-and-content-generator",
+      "featureTitle": "Test the end-to-end subscription flow: user clicks upgrade on pricing page, completes Stripe checkout, webhook processes payment, user tier is upgraded, and Pro/Elite features become accessible in the dashboard and content generator",
+      "files": [
+        "frontend/src/hooks/useQueries.ts",
+        "frontend/src/pages/ContentGenerator.tsx",
+        "frontend/src/pages/Dashboard.tsx",
+        "frontend/src/pages/PaymentSuccess.tsx",
+        "frontend/src/pages/SubscriptionManagement.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-40"
       ],
       "confidence": "high"
     }

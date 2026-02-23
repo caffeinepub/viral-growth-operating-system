@@ -28,6 +28,7 @@ export function useGetMySubscription() {
       return actor.getMySubscription();
     },
     enabled: !!actor && !isFetching,
+    staleTime: 0, // Always refetch to get latest subscription status
   });
 }
 
@@ -41,6 +42,7 @@ export function useCheckUserTier() {
       return actor.checkUserTier();
     },
     enabled: !!actor && !isFetching,
+    staleTime: 0, // Always refetch to get latest feature access
   });
 }
 
@@ -188,42 +190,20 @@ export function useCreateStripeCheckoutSession() {
     mutationFn: async (tier: TierLevel): Promise<CheckoutSession> => {
       if (!actor) throw new Error('Actor not available');
 
-      // Convert tier to ShoppingItem
-      const items: ShoppingItem[] = [];
-      
-      if (tier === 'pro') {
-        items.push({
-          productName: 'Pro Subscription',
-          productDescription: 'Monthly Pro tier subscription with full content generation features',
-          priceInCents: BigInt(2900), // $29.00
-          quantity: BigInt(1),
-          currency: 'usd',
-        });
-      } else if (tier === 'elite') {
-        items.push({
-          productName: 'Elite Subscription',
-          productDescription: 'Monthly Elite tier subscription with all premium features',
-          priceInCents: BigInt(7900), // $79.00
-          quantity: BigInt(1),
-          currency: 'usd',
-        });
-      } else {
-        throw new Error('Invalid tier for checkout');
-      }
-
       const baseUrl = `${window.location.protocol}//${window.location.host}`;
       const successUrl = `${baseUrl}/payment-success`;
       const cancelUrl = `${baseUrl}/payment-failure`;
 
-      const result = await actor.createCheckoutSession(items, successUrl, cancelUrl);
+      // Call the backend with tier parameter
+      const result = await actor.createStripeCheckoutSession(tier, successUrl, cancelUrl);
       
-      // Parse JSON response
+      // JSON parsing is critical for Stripe integration
       const session = JSON.parse(result) as CheckoutSession;
       
       if (!session?.url) {
         throw new Error('Stripe session missing url');
       }
-
+      
       return session;
     },
   });

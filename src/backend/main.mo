@@ -6,9 +6,7 @@ import OutCall "http-outcalls/outcall";
 import MixinAuthorization "authorization/MixinAuthorization";
 import Stripe "stripe/stripe";
 import Iter "mo:core/Iter";
-import Migration "migration";
 
-(with migration = Migration.run)
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
@@ -190,10 +188,9 @@ actor {
     userSubscriptions.get(caller);
   };
 
-  public shared ({ caller }) func processWebhook(eventType : WebhookEventType, principalText : Text, tier : ?TierLevel, customerId : ?Text) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can process webhooks");
-    };
+  // Webhook processing - no caller authentication required as this is called by Stripe
+  // In production, verify webhook signature instead
+  public shared func processWebhook(eventType : WebhookEventType, principalText : Text, tier : ?TierLevel, customerId : ?Text) : async () {
     let principal = Principal.fromText(principalText);
     switch (eventType) {
       case (#checkoutSessionCompleted) {
@@ -248,6 +245,9 @@ actor {
   };
 
   public shared ({ caller }) func setStripeConfiguration(config : Stripe.StripeConfiguration) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can configure Stripe");
+    };
     stripeConfig := config;
   };
 
@@ -302,6 +302,37 @@ actor {
       Runtime.trap("Unauthorized: Only users can create checkout sessions");
     };
     await Stripe.createCheckoutSession(stripeConfig, caller, items, successUrl, cancelUrl, transform);
+  };
+
+  public shared ({ caller }) func createStripeCheckoutSession(tier : TierLevel, successUrl : Text, cancelUrl : Text) : async Text {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can create checkout sessions");
+    };
+
+    let (stripePriceId, tierName) = switch (tier) {
+      case (#pro) { ("price_1T1UuP5XIYyFCA6UPpQqvD5u", "Pro") };
+      case (#elite) { ("price_1T1Uwp5XIYyFCA6U1p1AUMKk", "Elite") };
+      case (#free) {
+        Runtime.trap("Invalid tier. Cannot create checkout session for free tier.");
+      };
+    };
+
+    let stripeItem : Stripe.ShoppingItem = {
+      currency = "usd";
+      productName = tierName;
+      productDescription = "Monthly subscription for " # tierName # " tier";
+      priceInCents = 0;
+      quantity = 1;
+    };
+
+    await Stripe.createCheckoutSession(
+      stripeConfig,
+      caller,
+      [stripeItem],
+      successUrl,
+      cancelUrl,
+      transform,
+    );
   };
 
   public query func transform(input : OutCall.TransformationInput) : async OutCall.TransformationOutput {
