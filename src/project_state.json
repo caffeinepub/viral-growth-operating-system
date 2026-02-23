@@ -1,0 +1,286 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "AI-powered SaaS platform for short-form content creators - generates original, monetization-ready, algorithm-optimized content strategies with tiered subscription access (Free, Pro, Elite). Features trend analysis, brand voice memory, content scoring, and revenue optimization while maintaining strict copyright compliance.",
+  "architectural_notes": [
+    "Tiered access control system required: Free (3 hooks only), Pro (hooks/scripts/captions/hashtags/1 monetization angle), Elite (full suite + calendar + roadmap)",
+    "Payment processing via Stripe and PayPal - no direct payment handling or financial data storage by AI",
+    "Content generation based on user inputs: Tone, Audience, Platform, Niche, Goal",
+    "Copyright compliance layer must prevent copying real creators, lyrics, trademarks, or IP",
+    "Subscription-based feature gating determines content access externally"
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-build-authentication-system-using-internet-identity-to-identify-users-and-link-them-to-their-subscription-tier-and-content-generation-history",
+      "title": "Build authentication system using Internet Identity to identify users and link them to their subscription tier and content generation history",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-content-output-display-component-showing-generated-results-in-clear-sections-scroll-stopping-hooks-original-scripts-engagement-captions-hashtag-clusters-monetization-angles-psychological-trigger-breakdown-posting-frequency-recommendation-audience-pain-points-content-score-report-and-optional-faceless-version-with-tier-based-feature-gating",
+      "title": "Create content output display component showing generated results in clear sections: Scroll-Stopping Hooks, Original Scripts, Engagement Captions, Hashtag Clusters, Monetization Angles, Psychological Trigger Breakdown, Posting Frequency Recommendation, Audience Pain Points, Content Score Report, and Optional Faceless Version, with tier-based feature gating",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-content-score-display-component-showing-hook-strength-score-retention-potential-score-monetization-potential-score-all-1-10-numeric-scales-and-virality-probability-explanation-with-visual-indicators-progress-bars-or-gauges",
+      "title": "Create content score display component showing Hook Strength Score, Retention Potential Score, Monetization Potential Score (all 1-10 numeric scales), and Virality Probability Explanation with visual indicators (progress bars or gauges)",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-upgrade-encouragement-component-for-free-tier-users-showing-locked-features-with-prominent-upgrade-cta-when-they-attempt-to-access-pro-or-elite-content-sections",
+      "title": "Create upgrade encouragement component for Free tier users showing locked features with prominent upgrade CTA when they attempt to access Pro or Elite content sections",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-legal-compliance-disclaimers-on-content-output-pages-stating-that-all-generated-content-is-original-users-retain-commercial-rights-ai-assistance-does-not-guarantee-growth-or-income-and-outputs-avoid-copyrighted-material",
+      "title": "Display legal compliance disclaimers on content output pages stating that all generated content is original, users retain commercial rights, AI assistance does not guarantee growth or income, and outputs avoid copyrighted material",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-cohesive-visual-design-system-across-the-entire-platform-using-a-modern-professional-aesthetic-suitable-for-a-saas-content-creation-tool-with-a-distinctive-color-palette-avoid-blue-and-purple-contemporary-typography-and-polished-ui-patterns-that-convey-credibility-and-creative-energy",
+      "title": "Apply a cohesive visual design system across the entire platform using a modern, professional aesthetic suitable for a SaaS content creation tool, with a distinctive color palette (avoid blue and purple), contemporary typography, and polished UI patterns that convey credibility and creative energy",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Trend Analyzer Module - analyze short-form content trend patterns and recommend niche-specific adaptations",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Brand Voice Memory Module - analyze and maintain consistent brand personality across content outputs",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Content Performance Scoring - generate Hook Strength, Retention Potential, Monetization Potential, and Virality Probability scores",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Affiliate & Revenue Engine - suggest digital products, affiliate angles, funnels, brand deals, and CTAs",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Three-tier subscription system (Free/Pro/Elite) with feature gating based on subscription status",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Content generation suite - hooks, scripts, captions, hashtags, monetization angles, and content calendars based on user inputs",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Stripe and PayPal payment integration for recurring subscriptions with upgrade/downgrade tier switching",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Copyright compliance system - ensure all generated content is original and platform-safe",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Create backend data model for user subscription tiers (Free, Pro, Elite) with fields for tier level, subscription status, and feature access permissions",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Implement backend query function to check user tier and return available feature set based on tier access rules: Free (3 hooks only), Pro (hooks, scripts, captions, hashtags, 1 monetization angle, content score), Elite (full suite including 2 monetization angles, 7-day calendar, niche roadmap, affiliate suggestions, faceless version)",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Create backend data model for content generation requests with fields for tone, audience, platform, niche, and goal as input parameters",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Implement backend data model for generated content outputs including hooks (array of text), scripts (array of text), captions (array of text), hashtag clusters (array of text), monetization angles (array of text), psychological triggers (text), posting frequency recommendation (text), audience pain points (array of text), and content scores (hook strength 1-10, retention potential 1-10, monetization potential 1-10, virality explanation text)",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Create backend function to generate 5 scroll-stopping hooks under 8 seconds spoken length based on input parameters (tone, audience, platform, niche, goal) while ensuring 100% originality and avoiding copyrighted phrases, brand taglines, or specific influencer mimicry",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Create backend function to generate 3 original 30-45 second scripts based on input parameters, ensuring full originality and transformative content that uses trend structure only without copying specific wording or phrasing from existing creators",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-15",
+      "summary": "Create backend function to generate 5 engagement captions and 5 non-trademarked hashtag clusters optimized for the specified platform and niche",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Create backend function to generate monetization angles (1 for Pro tier, 2 for Elite tier) suggesting digital product ideas, affiliate positioning angles, low-ticket and high-ticket funnels, brand deal positioning, and call-to-action structure without making financial guarantees",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Create backend function to calculate and return content performance scores: Hook Strength Score (1-10), Retention Potential Score (1-10), Monetization Potential Score (1-10), and Virality Probability Explanation based on the generated content",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Create backend function to generate psychological trigger breakdown, posting frequency recommendation, and audience pain points analysis based on input parameters",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-19",
+      "summary": "Create backend function to generate 7-day micro content calendar with posting schedule for Elite tier users",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-20",
+      "summary": "Create backend function to generate niche domination roadmap and faceless content adaptation version for Elite tier users",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-21",
+      "summary": "Create backend function to generate and store brand voice profile based on user input analysis, maintaining consistent personality (beginner, expert, luxury, edgy, soft) across all content outputs for a user",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-23",
+      "summary": "Integrate Stripe payment processing for recurring monthly subscriptions with support for Pro and Elite tier upgrades and downgrades, storing subscription status in backend without storing financial data",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-24",
+      "summary": "Integrate PayPal payment processing as an alternative checkout option for subscriptions with same tier management as Stripe",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-25",
+      "summary": "Create landing page with platform overview explaining AI Viral Growth Operating System purpose: generating original, monetization-ready, algorithm-optimized content strategies for short-form content creators with strict copyright compliance",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-26",
+      "summary": "Create subscription tier comparison page displaying Free, Pro, and Elite tiers with feature lists and pricing, including upgrade CTAs",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-27",
+      "summary": "Create content generation form accepting user inputs for Tone, Audience, Platform, Niche, and Goal with clear labels and validation",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-31",
+      "summary": "Create dashboard showing user's current subscription tier, available features, and content generation history with quick access to create new content",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-32",
+      "summary": "Create subscription management page allowing users to view current plan, upgrade or downgrade tiers, and manage Stripe or PayPal billing",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-33",
+      "summary": "Create 7-day content calendar view displaying micro content schedule with posting recommendations for Elite tier users",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Viral Growth Operating System",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

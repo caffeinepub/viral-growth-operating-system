@@ -1,2 +1,3 @@
-# viral-growth-operating-system
-Exported from Caffeine project: Viral Growth Operating System
+## Viral Growth Operating System
+
+To run app build and run docker image: `docker build -t app . docker run -it --network host app`

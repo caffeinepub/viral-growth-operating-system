@@ -1,0 +1,135 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-build-authentication-system-using-internet-identity-to-identify-users-and-link-them-to-their-subscription-tier-and-content-generation-history",
+      "featureTitle": "Build authentication system using Internet Identity to identify users and link them to their subscription tier and content generation history",
+      "files": [
+        "frontend/src/components/ProfileSetupModal.tsx",
+        "frontend/src/hooks/useGetCallerUserProfile.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-14"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-content-output-display-component-showing-generated-results-in-clear-sections-scroll-stopping-hooks-original-scripts-engagement-captions-hashtag-clusters-monetization-angles-psychological-trigger-breakdown-posting-frequency-recommendation-audience-pain-points-content-score-report-and-optional-faceless-version-with-tier-based-feature-gating",
+      "featureTitle": "Create content output display component showing generated results in clear sections: Scroll-Stopping Hooks, Original Scripts, Engagement Captions, Hashtag Clusters, Monetization Angles, Psychological Trigger Breakdown, Posting Frequency Recommendation, Audience Pain Points, Content Score Report, and Optional Faceless Version, with tier-based feature gating",
+      "files": [
+        "frontend/src/components/ContentOutput.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-20"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-content-score-display-component-showing-hook-strength-score-retention-potential-score-monetization-potential-score-all-1-10-numeric-scales-and-virality-probability-explanation-with-visual-indicators-progress-bars-or-gauges",
+      "featureTitle": "Create content score display component showing Hook Strength Score, Retention Potential Score, Monetization Potential Score (all 1-10 numeric scales), and Virality Probability Explanation with visual indicators (progress bars or gauges)",
+      "files": [
+        "frontend/src/components/ContentScoreCard.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-21"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-upgrade-encouragement-component-for-free-tier-users-showing-locked-features-with-prominent-upgrade-cta-when-they-attempt-to-access-pro-or-elite-content-sections",
+      "featureTitle": "Create upgrade encouragement component for Free tier users showing locked features with prominent upgrade CTA when they attempt to access Pro or Elite content sections",
+      "files": [
+        "frontend/src/components/UpgradePrompt.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-22"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-display-legal-compliance-disclaimers-on-content-output-pages-stating-that-all-generated-content-is-original-users-retain-commercial-rights-ai-assistance-does-not-guarantee-growth-or-income-and-outputs-avoid-copyrighted-material",
+      "featureTitle": "Display legal compliance disclaimers on content output pages stating that all generated content is original, users retain commercial rights, AI assistance does not guarantee growth or income, and outputs avoid copyrighted material",
+      "files": [
+        "frontend/src/components/ContentOutput.tsx",
+        "frontend/src/components/LegalDisclaimer.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-26"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-apply-a-cohesive-visual-design-system-across-the-entire-platform-using-a-modern-professional-aesthetic-suitable-for-a-saas-content-creation-tool-with-a-distinctive-color-palette-avoid-blue-and-purple-contemporary-typography-and-polished-ui-patterns-that-convey-credibility-and-creative-energy",
+      "featureTitle": "Apply a cohesive visual design system across the entire platform using a modern, professional aesthetic suitable for a SaaS content creation tool, with a distinctive color palette (avoid blue and purple), contemporary typography, and polished UI patterns that convey credibility and creative energy",
+      "files": [
+        "frontend/src/components/Layout.tsx",
+        "frontend/src/index.css",
+        "frontend/tailwind.config.js"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-27"
+      ],
+      "confidence": "high"
+    }
+  ]
+}
