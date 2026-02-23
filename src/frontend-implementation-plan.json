@@ -1,79 +1,27 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Stripe Payment Integration - Frontend Implementation",
+  "title": "Configure Stripe API keys for payment integration",
   "requirements": [
     {
-      "id": "REQ-31",
-      "summary": "Create Stripe configuration setup page prompting admin for API keys and webhook signing secret when Stripe is not configured",
+      "id": "REQ-36",
+      "summary": "Update the StripeSetup page to detect and display successful Stripe configuration",
       "acceptanceCriteria": [
-        "Page displays form fields for Stripe publishable key, secret key, and webhook signing secret",
-        "Shows clear instructions on where to find these values in the Stripe dashboard",
-        "Includes a link to Stripe documentation for setup guidance",
-        "Form validates that keys are in the correct format before submission",
-        "Only accessible to the application owner or admin"
+        "The StripeSetup page queries the backend to check if Stripe is already configured",
+        "When configuration exists, display a success message showing the publishable key in use",
+        "Provide visual confirmation that payment integration is active",
+        "Allow updating the configuration if needed"
       ],
       "file_operations": [
         {
           "path": "frontend/src/pages/StripeSetup.tsx",
-          "operation": "create",
-          "description": "Create a Stripe setup page that checks if Stripe is configured using isStripeConfigured(). If not configured, display a form requesting Stripe publishable key, secret key, and webhook signing secret with validation and instructions linking to Stripe documentation. Use the authorization component to ensure only admins can access this page by checking isCallerAdmin(). Call setStripeConfiguration() to save the configuration. Include clear field labels and validation for key format (sk_ for secret, pk_ for publishable, whsec_ for webhook secret)."
-        },
-        {
-          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Add a route for '/stripe-setup' that renders the StripeSetup page. Ensure this route is only accessible to authenticated admin users by using the authorization component's role checks."
+          "description": "Add logic to detect when Stripe configuration exists by calling isStripeConfigured() on component mount. When configured, display a success confirmation message indicating that Stripe is active. Extract and display the publishable key from the stored configuration (derived from the secret key field or retrieved via a dedicated query if available). Add UI to allow admins to update the configuration if needed. Maintain admin-only access control and form validation for configuration updates."
         },
-        {
-          "path": "frontend/src/components/Layout.tsx",
-          "operation": "modify",
-          "description": "Add a conditional navigation link to 'Stripe Setup' in the navigation menu that only appears for authenticated admin users. Use isCallerAdmin() to determine visibility."
-        }
-      ]
-    },
-    {
-      "id": "REQ-32",
-      "summary": "Update PricingPage to initiate Stripe checkout when authenticated user selects paid tier, redirecting to Stripe-hosted checkout",
-      "acceptanceCriteria": [
-        "Clicking 'Select Plan' for Pro or Elite tier calls the backend checkout session endpoint",
-        "Redirects user to the returned Stripe checkout URL",
-        "Shows loading state while creating the checkout session",
-        "Displays error message if checkout session creation fails",
-        "Free tier selection routes to dashboard without payment flow"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useStripeCheckout.ts",
-          "operation": "create",
-          "description": "Create a custom React Query mutation hook useCreateStripeCheckoutSession that wraps createCheckoutSession(). Accept a tier parameter (Pro or Elite) and convert it to ShoppingItem[] format with appropriate pricing. Parse the JSON response to extract the CheckoutSession with id and url fields. Validate that session.url exists before returning. Include proper error handling for missing actor, parsing failures, and missing URL. Set success and cancel URLs using window.location origin combined with '/payment-success' and '/payment-failure' paths."
-        },
-        {
-          "path": "frontend/src/pages/PricingPage.tsx",
-          "operation": "modify",
-          "description": "Import and use useCreateStripeCheckoutSession hook. Update the 'Select Plan' button handlers for Pro and Elite tiers to call the mutation with the selected tier. Show loading state with disabled button and spinner while mutating. On success, redirect to session.url using window.location.href (not router navigation). Display toast error message if checkout fails. For Free tier, keep existing routing to dashboard. Ensure users must be authenticated before initiating checkout by checking authentication state."
-        }
-      ]
-    },
-    {
-      "id": "REQ-33",
-      "summary": "Update SubscriptionManagement page to display Stripe subscription details and add Manage Billing button that opens Stripe customer portal",
-      "acceptanceCriteria": [
-        "Shows current subscription tier with Stripe billing status (active, past_due, canceled)",
-        "Displays next billing date for active subscriptions",
-        "Manage Billing button calls backend to create customer portal session",
-        "Redirects user to Stripe portal where they can update payment methods and cancel",
-        "Shows appropriate messaging for users without active Stripe subscriptions"
-      ],
-      "file_operations": [
         {
           "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Add a new React Query mutation hook useGetCustomerPortalUrl that calls a backend capability to generate a Stripe customer portal session URL. The hook should parse the JSON response to extract the portal URL and handle errors appropriately. Note: Verify the stripe component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/SubscriptionManagement.tsx",
-          "operation": "modify",
-          "description": "Import and use useGetCustomerPortalUrl mutation. Display the current subscription status and tier from getMySubscription(). Show billing status using the subscription.status field (active, pending, cancelled). Add a 'Manage Billing' button that calls the customer portal mutation and redirects to the returned portal URL using window.location.href. Show loading state while creating portal session. Display appropriate messages for users without active subscriptions. Include conditional rendering based on subscription status. Use the stripe component to support billing management functionality."
+          "description": "Add a React Query hook useIsStripeConfigured() that calls the backend isStripeConfigured() method to check configuration status. Ensure the hook is enabled only when the actor is available and properly handles loading and error states. This hook will be used by the StripeSetup page to determine whether to show the configuration form or the success confirmation message."
         }
       ]
     }

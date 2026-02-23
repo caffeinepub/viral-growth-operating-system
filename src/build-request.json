@@ -1,160 +1,54 @@
 {
   "kind": "build_request",
-  "title": "Implement Stripe payment integration with user setup flow",
-  "priority": "normal",
+  "title": "Configure Stripe API keys for payment integration",
+  "projectName": "Viral Growth Operating System",
+  "priority": "high",
   "requirements": [
     {
-      "id": "REQ-28",
-      "text": "Create a Stripe checkout session endpoint in the backend that accepts a tier parameter (Pro or Elite) and returns a Stripe checkout URL, handling session creation with the Internet Identity principal as the customer identifier",
+      "id": "REQ-35",
+      "text": "Store the Stripe publishable key 'pk_test_51SqMs35XIYyFCA6UuZ8GXNAzRZsqbfQp5BF04WIUWga5yUnsQENDd9uMjCN4qf2JxULjQfTkueFMVnyIBQB6GtFo00JaLPSbs1' and secret key 'sk_test_51SqMs35XIYyFCA6UWJR2oA59uinQ364YwSTGN0nD9K6Fuv5skkELENbTdpqlxeKb9m91nHaZf8DgIN2JMpofVpoh004N8ftZJN' in the backend Stripe configuration using the existing setStripeConfig function",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-last"
+          "msg-5"
         ],
         "quotes": [
-          "Ok lets go with stripe"
+          "pk_test_51SqMs35XIYyFCA6UuZ8GXNAzRZsqbfQp5BF04WIUWga5yUnsQENDd9uMjCN4qf2JxULjQfTkueFMVnyIBQB6GtFo00JaLPSbs1.         sk_test_51SqMs35XIYyFCA6UWJR2oA59uinQ364YwSTGN0nD9K6Fuv5skkELENbTdpqlxeKb9m91nHaZf8DgIN2JMpofVpoh004N8ftZJN"
         ]
       },
       "acceptanceCriteria": [
-        "Backend function accepts tier parameter and validates it is either Pro or Elite",
-        "Function creates a Stripe checkout session with the appropriate pricing for the selected tier",
-        "Uses the caller's Internet Identity principal as the customer reference",
-        "Returns a checkout URL that redirects to PaymentSuccess on success and PaymentFailure on cancellation",
-        "Includes subscription metadata (tier, userId) in the Stripe session"
+        "The backend stores the publishable key 'pk_test_51SqMs35XIYyFCA6UuZ8GXNAzRZsqbfQp5BF04WIUWga5yUnsQENDd9uMjCN4qf2JxULjQfTkueFMVnyIBQB6GtFo00JaLPSbs1' in stripeConfig",
+        "The backend stores the secret key 'sk_test_51SqMs35XIYyFCA6UWJR2oA59uinQ364YwSTGN0nD9K6Fuv5skkELENbTdpqlxeKb9m91nHaZf8DgIN2JMpofVpoh004N8ftZJN' in stripeConfig",
+        "The getStripePublishableKey function returns the stored publishable key when called",
+        "The Stripe checkout and customer portal functions can use the stored secret key for API calls"
       ]
     },
     {
-      "id": "REQ-29",
-      "text": "Create a Stripe webhook handler endpoint in the backend that processes checkout.session.completed events to update user subscription status and tier in the backend data model",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-last"
-        ],
-        "quotes": [
-          "Ok lets go with stripe"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Webhook endpoint verifies Stripe signature for security",
-        "Processes checkout.session.completed events to activate subscriptions",
-        "Updates user's subscription tier and status in backend storage",
-        "Maps Stripe customer ID to Internet Identity principal for future reference",
-        "Handles subscription renewal events to maintain active status"
-      ]
-    },
-    {
-      "id": "REQ-30",
-      "text": "Add backend functions to retrieve Stripe publishable key and create a customer portal session URL for authenticated users to manage their billing",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-last"
-        ],
-        "quotes": [
-          "Ok lets go with stripe"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Query function returns Stripe publishable key for frontend initialization",
-        "Function creates Stripe customer portal session for authenticated users",
-        "Portal session allows users to update payment methods and view invoices",
-        "Returns portal URL that redirects back to subscription management page"
-      ]
-    },
-    {
-      "id": "REQ-31",
-      "text": "Create a Stripe configuration setup page in the frontend that prompts for Stripe API keys (publishable and secret) and webhook signing secret when Stripe is not yet configured",
+      "id": "REQ-36",
+      "text": "Update the frontend StripeSetup page to automatically detect when Stripe configuration has been successfully stored and display a confirmation message with the configured publishable key",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-last"
-        ],
-        "quotes": [
-          "let me know when you want me too enter my information for stripe"
+          "msg-5"
         ]
       },
       "acceptanceCriteria": [
-        "Page displays form fields for Stripe publishable key, secret key, and webhook signing secret",
-        "Shows clear instructions on where to find these values in the Stripe dashboard",
-        "Includes a link to Stripe documentation for setup guidance",
-        "Form validates that keys are in the correct format before submission",
-        "Only accessible to the application owner or admin"
-      ]
-    },
-    {
-      "id": "REQ-32",
-      "text": "Update the PricingPage component to initiate Stripe checkout when an authenticated user selects a paid tier, redirecting them to the Stripe-hosted checkout page",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-last"
-        ],
-        "quotes": [
-          "Ok lets go with stripe"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Clicking 'Select Plan' for Pro or Elite tier calls the backend checkout session endpoint",
-        "Redirects user to the returned Stripe checkout URL",
-        "Shows loading state while creating the checkout session",
-        "Displays error message if checkout session creation fails",
-        "Free tier selection routes to dashboard without payment flow"
-      ]
-    },
-    {
-      "id": "REQ-33",
-      "text": "Update the SubscriptionManagement page to display current Stripe subscription details and add a 'Manage Billing' button that opens the Stripe customer portal",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-last"
-        ],
-        "quotes": [
-          "Ok lets go with stripe"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Shows current subscription tier with Stripe billing status (active, past_due, canceled)",
-        "Displays next billing date for active subscriptions",
-        "Manage Billing button calls backend to create customer portal session",
-        "Redirects user to Stripe portal where they can update payment methods and cancel",
-        "Shows appropriate messaging for users without active Stripe subscriptions"
-      ]
-    },
-    {
-      "id": "REQ-34",
-      "text": "Add backend storage for Stripe configuration (API keys and webhook secret) with secure initialization flow that allows one-time setup of these credentials",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-last"
-        ],
-        "quotes": [
-          "let me know when you want me too enter my information for stripe"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Backend stores Stripe publishable key, secret key, and webhook signing secret",
-        "Provides an initialization function that can only be called once or by the canister controller",
-        "All Stripe API calls use the stored secret key",
-        "Webhook handler uses the stored signing secret for verification",
-        "Configuration cannot be retrieved by regular users for security"
+        "The StripeSetup page queries the backend to check if Stripe is already configured",
+        "When configuration exists, display a success message showing the publishable key in use",
+        "Provide visual confirmation that payment integration is active",
+        "Allow updating the configuration if needed"
       ]
     }
   ],
   "constraints": [
-    "Do not store sensitive payment information (card numbers, CVV) in the backend",
-    "Stripe API keys must be stored securely and not exposed to frontend except publishable key",
-    "Use Stripe-hosted checkout pages rather than custom payment forms",
-    "Maintain single-actor backend architecture with all logic in main.mo"
+    "Use the existing setStripeConfig backend function without modifying the Stripe configuration data structure",
+    "Do not store Stripe keys in frontend code or expose the secret key in any frontend API responses",
+    "Maintain single-actor architecture in backend/main.mo"
   ],
   "nonGoals": [
-    "PayPal integration (focusing on Stripe only per user request)",
-    "Custom payment form UI (using Stripe-hosted checkout)",
-    "Subscription downgrade logic (user can cancel via Stripe portal)",
-    "Proration handling for mid-cycle upgrades",
-    "Multiple payment methods support beyond Stripe"
+    "Creating new Stripe configuration endpoints or data models",
+    "Modifying the existing Stripe checkout or webhook handling logic",
+    "Adding webhook signing secret (not provided in user message)"
   ],
   "imageRequirements": {
     "required": [],

@@ -17,5 +17,5 @@
   "frontend/src/hooks/useQueries.ts": "Collection of React Query hooks for all backend operations including profile management, subscription queries, feature checks, content generation, admin checks, Stripe configuration, and checkout session creation with proper JSON parsing and TierLevel enum handling.",
   "frontend/src/index.css": "Global styles with warm, energetic OKLCH color system featuring coral-orange primary colors and vibrant chart colors suitable for content creators, with both light and dark mode support.",
   "frontend/tailwind.config.js": "Tailwind configuration extending theme with custom color palette, Inter font family, custom shadows including glow effects, and fade-in animation.",
-  "frontend/src/pages/StripeSetup.tsx": "Admin-only Stripe configuration page with form for entering secret key and allowed countries, validation, instructions linking to Stripe dashboard, and security notes."
+  "frontend/src/pages/StripeSetup.tsx": "Admin-only Stripe configuration page that displays a success state when Stripe is configured (showing publishable key hint and secured status), with an edit button to update configuration, or shows the configuration form for initial setup or updates with validation and security instructions."
 }

@@ -1,15 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Implement Stripe payment integration with secure configuration setup and subscription management flow.
+**Goal:** Configure Stripe API keys in the backend and update the frontend to display confirmation when Stripe is configured.
 
 **Planned changes:**
-- Add backend Stripe checkout session creation endpoint that accepts tier parameter and returns checkout URL
-- Create backend webhook handler for Stripe checkout.session.completed events to update user subscription status
-- Add backend functions to retrieve Stripe publishable key and create customer portal sessions
-- Implement backend secure storage for Stripe API keys and webhook secret with one-time initialization
-- Create frontend Stripe configuration setup page for entering API keys and webhook secret
-- Update PricingPage to redirect authenticated users to Stripe checkout for paid tiers
-- Update SubscriptionManagement page to show Stripe billing details and add Manage Billing button for portal access
+- Store Stripe publishable and secret keys in the backend using the existing setStripeConfig function
+- Update the StripeSetup page to detect existing Stripe configuration and display confirmation message with the publishable key
+- Add visual confirmation that payment integration is active
+- Allow updating the configuration if needed
 
-**User-visible outcome:** Users can select paid subscription tiers and complete payment through Stripe-hosted checkout. Application owner can configure Stripe credentials through a setup page. Subscribed users can manage their billing through the Stripe customer portal.
+**User-visible outcome:** Users will see automatic confirmation on the StripeSetup page that Stripe is configured, showing the publishable key in use, and will be able to update the configuration if needed.

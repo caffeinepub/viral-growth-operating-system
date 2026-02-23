@@ -1,82 +1,33 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-23T01:27:30.143Z",
+  "generatedAt": "2026-02-23T01:53:35.882Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 7,
-    "implemented": 3,
+    "total": 2,
+    "implemented": 1,
     "items": [
       {
-        "id": "REQ-28",
-        "summary": "Create a Stripe checkout session endpoint in the backend that accepts a tier parameter (Pro or Elite) and returns a Stripe checkout URL, handling session creation with the Internet Identity principal as the customer identifier",
+        "id": "REQ-35",
+        "summary": "Store the Stripe publishable key 'pk_test_51SqMs35XIYyFCA6UuZ8GXNAzRZsqbfQp5BF04WIUWga5yUnsQENDd9uMjCN4qf2JxULjQfTkueFMVnyIBQB6GtFo00JaLPSbs1' and secret key 'sk_test_51SqMs35XIYyFCA6UWJR2oA59uinQ364YwSTGN0nD9K6Fuv5skkELENbTdpqlxeKb9m91nHaZf8DgIN2JMpofVpoh004N8ftZJN' in the backend Stripe configuration using the existing setStripeConfig function",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
       },
       {
-        "id": "REQ-29",
-        "summary": "Create a Stripe webhook handler endpoint in the backend that processes checkout.session.completed events to update user subscription status and tier in the backend data model",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-30",
-        "summary": "Add backend functions to retrieve Stripe publishable key and create a customer portal session URL for authenticated users to manage their billing",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-31",
-        "summary": "Create a Stripe configuration setup page in the frontend that prompts for Stripe API keys (publishable and secret) and webhook signing secret when Stripe is not yet configured",
+        "id": "REQ-36",
+        "summary": "Update the frontend StripeSetup page to automatically detect when Stripe configuration has been successfully stored and display a confirmation message with the configured publishable key",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/pages/StripeSetup.tsx",
-          "frontend/src/App.tsx",
-          "frontend/src/components/Layout.tsx"
+          "frontend/src/hooks/useQueries.ts"
         ],
         "matchedFiles": [
-          "frontend/src/pages/StripeSetup.tsx",
-          "frontend/src/App.tsx",
-          "frontend/src/components/Layout.tsx"
+          "frontend/src/pages/StripeSetup.tsx"
         ]
-      },
-      {
-        "id": "REQ-32",
-        "summary": "Update the PricingPage component to initiate Stripe checkout when an authenticated user selects a paid tier, redirecting them to the Stripe-hosted checkout page",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useStripeCheckout.ts",
-          "frontend/src/pages/PricingPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/PricingPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-33",
-        "summary": "Update the SubscriptionManagement page to display current Stripe subscription details and add a 'Manage Billing' button that opens the Stripe customer portal",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/pages/SubscriptionManagement.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/pages/SubscriptionManagement.tsx"
-        ]
-      },
-      {
-        "id": "REQ-34",
-        "summary": "Add backend storage for Stripe configuration (API keys and webhook secret) with secure initialization flow that allows one-time setup of these credentials",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
       }
     ]
   },
@@ -84,20 +35,10 @@
     "backend/main.mo",
     "backend/migration.mo",
     "build-request.json",
-    "build-template/README.md",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/components/Layout.tsx",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useQueries.ts",
-    "frontend/src/pages/PricingPage.tsx",
     "frontend/src/pages/StripeSetup.tsx",
-    "frontend/src/pages/SubscriptionManagement.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",
