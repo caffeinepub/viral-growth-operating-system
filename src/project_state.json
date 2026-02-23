@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 3,
+  "projectStateVersion": 5,
   "summary": "AI-powered SaaS platform for short-form content creators - generates original, monetization-ready, algorithm-optimized content strategies with tiered subscription access (Free, Pro, Elite). Features trend analysis, brand voice memory, content scoring, and revenue optimization while maintaining strict copyright compliance.",
   "architectural_notes": [
     "Tiered access control system required: Free (3 hooks only), Pro (hooks/scripts/captions/hashtags/1 monetization angle), Elite (full suite + calendar + roadmap)",
@@ -57,6 +57,30 @@
       "title": "Apply a cohesive visual design system across the entire platform using a modern, professional aesthetic suitable for a SaaS content creation tool, with a distinctive color palette (avoid blue and purple), contemporary typography, and polished UI patterns that convey credibility and creative energy",
       "reqIds": [
         "REQ-27"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-stripe-configuration-setup-page-in-the-frontend-that-prompts-for-stripe-api-keys-publishable-and-secret-and-webhook-signing-secret-when-stripe-is-not-yet-configured",
+      "title": "Create a Stripe configuration setup page in the frontend that prompts for Stripe API keys (publishable and secret) and webhook signing secret when Stripe is not yet configured",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-pricingpage-component-to-initiate-stripe-checkout-when-an-authenticated-user-selects-a-paid-tier-redirecting-them-to-the-stripe-hosted-checkout-page",
+      "title": "Update the PricingPage component to initiate Stripe checkout when an authenticated user selects a paid tier, redirecting them to the Stripe-hosted checkout page",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-subscriptionmanagement-page-to-display-current-stripe-subscription-details-and-add-a-manage-billing-button-that-opens-the-stripe-customer-portal",
+      "title": "Update the SubscriptionManagement page to display current Stripe subscription details and add a 'Manage Billing' button that opens the Stripe customer portal",
+      "reqIds": [
+        "REQ-33"
       ],
       "version": 1
     }
@@ -275,6 +299,38 @@
       "summary": "Create 7-day content calendar view displaying micro content schedule with posting recommendations for Elite tier users",
       "reqIds": [
         "REQ-25"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-34",
+      "summary": "Create a Stripe checkout session endpoint in the backend that accepts a tier parameter (Pro or Elite) and returns a Stripe checkout URL, handling session creation with the Internet Identity principal as the customer identifier",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-35",
+      "summary": "Create a Stripe webhook handler endpoint in the backend that processes checkout.session.completed events to update user subscription status and tier in the backend data model",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-36",
+      "summary": "Add backend functions to retrieve Stripe publishable key and create a customer portal session URL for authenticated users to manage their billing",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-40",
+      "summary": "Add backend storage for Stripe configuration (API keys and webhook secret) with secure initialization flow that allows one-time setup of these credentials",
+      "reqIds": [
+        "REQ-34"
       ],
       "status": "pending"
     }

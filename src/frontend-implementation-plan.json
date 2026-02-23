@@ -1,361 +1,79 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "AI Viral Growth Operating System - Frontend Implementation",
+  "title": "Stripe Payment Integration - Frontend Implementation",
   "requirements": [
     {
-      "id": "REQ-14",
-      "summary": "Implement Internet Identity authentication with subscription tier and content history linking",
+      "id": "REQ-31",
+      "summary": "Create Stripe configuration setup page prompting admin for API keys and webhook signing secret when Stripe is not configured",
       "acceptanceCriteria": [
-        "Users can authenticate using Internet Identity",
-        "User principal is stored and linked to subscription data",
-        "Authentication state persists across sessions",
-        "User's tier and content history are accessible after login"
+        "Page displays form fields for Stripe publishable key, secret key, and webhook signing secret",
+        "Shows clear instructions on where to find these values in the Stripe dashboard",
+        "Includes a link to Stripe documentation for setup guidance",
+        "Form validates that keys are in the correct format before submission",
+        "Only accessible to the application owner or admin"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/LoginButton.tsx",
+          "path": "frontend/src/pages/StripeSetup.tsx",
           "operation": "create",
-          "description": "Create login/logout button component using the authorization component's authentication system. Use useInternetIdentity hook for login/clear functionality and useQueryClient to clear cached data on logout. Component should show 'Login', 'Logging in...', or 'Logout' based on authentication state. Verify the component's usage instructions before implementing."
+          "description": "Create a Stripe setup page that checks if Stripe is configured using isStripeConfigured(). If not configured, display a form requesting Stripe publishable key, secret key, and webhook signing secret with validation and instructions linking to Stripe documentation. Use the authorization component to ensure only admins can access this page by checking isCallerAdmin(). Call setStripeConfiguration() to save the configuration. Include clear field labels and validation for key format (sk_ for secret, pk_ for publishable, whsec_ for webhook secret)."
         },
         {
-          "path": "frontend/src/hooks/useGetCallerUserProfile.ts",
-          "operation": "create",
-          "description": "Create hook to fetch current user profile using getCallerUserProfile backend method. Use useQuery with proper actor dependency handling to prevent profile setup modal flash. Return custom state reflecting actor loading state. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/ProfileSetupModal.tsx",
-          "operation": "create",
-          "description": "Create modal component for first-time user profile setup. Show only when user is authenticated, profile is fetched, and no profile exists. Collect user name and email, then call saveCallerUserProfile. Use the authorization component's profile setup pattern with proper loading state handling. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/ProtectedRoute.tsx",
-          "operation": "create",
-          "description": "Create route wrapper component that ensures user is logged in before showing application data. Redirect to login if not authenticated. Use authorization component's authentication checking pattern. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-15",
-      "summary": "Integrate Stripe payment processing for Pro and Elite tier subscriptions with upgrade/downgrade support",
-      "acceptanceCriteria": [
-        "Stripe integration handles recurring monthly billing",
-        "Users can upgrade from Free to Pro or Elite",
-        "Users can downgrade between tiers",
-        "Subscription status updates backend user tier without storing card details",
-        "Payment processing is handled externally by Stripe"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/StripePaymentSetup.tsx",
-          "operation": "create",
-          "description": "Create admin component to configure Stripe integration. Use the stripe component to check isStripeConfigured and provide UI for setStripeConfiguration with secret key and allowed countries input. Show setup panel only if Stripe is not yet configured. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/hooks/useCreateCheckoutSession.ts",
-          "operation": "create",
-          "description": "Create mutation hook for Stripe checkout session creation using the stripe component. Use createCheckoutSession backend method with ShoppingItem array, construct success/cancel URLs, parse JSON response, validate session.url exists before returning. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/SubscriptionCheckout.tsx",
-          "operation": "create",
-          "description": "Create checkout component for tier upgrades using the stripe component's Payment pattern. Use useCreateCheckoutSession hook with tier-based ShoppingItem configuration. Validate session.url exists, then redirect to Stripe using window.location.href (not router navigation). Handle errors if url is missing. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/PaymentSuccess.tsx",
-          "operation": "create",
-          "description": "Create success page component for completed Stripe payments using the stripe component pattern. Display confirmation message and CTA to return to dashboard. Clear any checkout-related cache. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/PaymentFailure.tsx",
-          "operation": "create",
-          "description": "Create failure page component for cancelled Stripe payments using the stripe component pattern. Display cancellation message and CTA to retry or return to pricing. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/routes/__root.tsx",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Add route registrations for /payment-success and /payment-failure paths pointing to PaymentSuccess and PaymentFailure components using @tanstack/router as specified by the stripe component."
-        }
-      ]
-    },
-    {
-      "id": "REQ-16",
-      "summary": "Integrate PayPal as alternative payment option with same tier management as Stripe",
-      "acceptanceCriteria": [
-        "PayPal is available as a payment option",
-        "PayPal subscriptions update user tier in backend",
-        "Tier management is consistent between Stripe and PayPal",
-        "No financial data is stored locally"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/SubscriptionCheckout.tsx",
-          "operation": "modify",
-          "description": "Add PayPal payment option alongside Stripe in checkout component. Use PayPal SDK for subscription creation with same tier upgrade logic. Both payment methods should update backend tier via processSubscriptionUpgrade method."
-        }
-      ]
-    },
-    {
-      "id": "REQ-17",
-      "summary": "Create landing page explaining platform purpose and value proposition",
-      "acceptanceCriteria": [
-        "Landing page clearly explains platform purpose",
-        "Copy emphasizes original content generation and copyright compliance",
-        "Page includes call-to-action to sign up or learn more",
-        "Platform value proposition is immediately clear to visitors"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/LandingPage.tsx",
-          "operation": "create",
-          "description": "Create landing page component explaining AI Viral Growth Operating System for short-form content creators. Emphasize 100% original content generation, monetization-ready strategies, algorithm optimization, and strict copyright compliance. Include hero section with clear value proposition, feature highlights, and prominent sign-up CTA. Use existing global styling from frontend/src/index.css for consistent design."
-        },
-        {
-          "path": "frontend/src/routes/index.tsx",
-          "operation": "create",
-          "description": "Create route file for landing page at root path (/). Import and render LandingPage component. This is the primary entry point for new visitors."
-        }
-      ]
-    },
-    {
-      "id": "REQ-18",
-      "summary": "Create subscription tier comparison page with Free, Pro, and Elite features and pricing",
-      "acceptanceCriteria": [
-        "Page displays three tier columns: Free, Pro, Elite",
-        "Each tier clearly lists included features",
-        "Pricing is displayed for Pro and Elite tiers",
-        "Upgrade buttons are prominent on Free and Pro tiers",
-        "Feature comparison is easy to scan visually"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/PricingPage.tsx",
-          "operation": "create",
-          "description": "Create pricing comparison page with three tier columns: Free (3 hooks only, no scripts/monetization), Pro (hooks, scripts, captions, hashtags, 1 monetization angle, content score), Elite (full suite, 2 monetization angles, 7-day calendar, roadmap, affiliate suggestions, faceless version). Display pricing for Pro and Elite. Include upgrade CTAs on Free and Pro tiers linking to SubscriptionCheckout. Use card layout with clear feature lists."
-        },
-        {
-          "path": "frontend/src/routes/pricing.tsx",
-          "operation": "create",
-          "description": "Create route file for pricing page at /pricing path. Import and render PricingPage component."
-        }
-      ]
-    },
-    {
-      "id": "REQ-19",
-      "summary": "Create content generation form with validation for Tone, Audience, Platform, Niche, and Goal inputs",
-      "acceptanceCriteria": [
-        "Form includes input fields for Tone, Audience, Platform, Niche, and Goal",
-        "Each field has a clear label and placeholder text",
-        "Form validates that all required fields are filled before submission",
-        "Form submits data to backend for content generation"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/ContentGenerationForm.tsx",
-          "operation": "create",
-          "description": "Create form component with text inputs for Tone, Audience, Platform, Niche, and Goal. Add clear labels and helpful placeholder text for each field. Implement client-side validation requiring all fields before submission. On submit, call addContentRequest backend method with ContentGenerationRequest object. Show loading state during submission. Display success/error feedback."
-        },
-        {
-          "path": "frontend/src/hooks/useAddContentRequest.ts",
-          "operation": "create",
-          "description": "Create mutation hook wrapping addContentRequest backend method. Accept ContentGenerationRequest object, submit to backend, and handle success/error states. Invalidate content requests cache on success to trigger refetch."
-        }
-      ]
-    },
-    {
-      "id": "REQ-20",
-      "summary": "Create content output display with tier-based feature gating for all 10 content sections",
-      "acceptanceCriteria": [
-        "Component displays all 10 content sections with clear headings",
-        "Free users see only 3 hooks with upgrade prompts for locked sections",
-        "Pro users see hooks, scripts, captions, hashtags, 1 monetization angle, and content scores",
-        "Elite users see all sections including 2 monetization angles, calendar, roadmap, and faceless version",
-        "Layout is clean, professional, and easy to scan",
-        "Each section is visually distinct"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/ContentOutput.tsx",
-          "operation": "create",
-          "description": "Create content display component with 10 sections: Scroll-Stopping Hooks (5 max), Original Scripts (3 max), Engagement Captions (5 max), Hashtag Clusters (5 max), Monetization Angles (tier-dependent), Psychological Trigger Breakdown, Posting Frequency Recommendation, Audience Pain Points, Content Score Report, Optional Faceless Version. Use checkUserTier backend method to determine feature access. For Free users, show 3 hooks only with upgrade prompts. For Pro, show hooks, scripts, captions, hashtags, 1 monetization angle, scores. For Elite, show all features. Use clear section headings, professional layout, and distinct visual separation between sections."
-        },
-        {
-          "path": "frontend/src/hooks/useCheckUserTier.ts",
-          "operation": "create",
-          "description": "Create query hook wrapping checkUserTier backend method. Return FeatureSet object indicating which features are available for current user's tier. Cache result to avoid repeated checks."
-        },
-        {
-          "path": "frontend/src/hooks/useGenerateContent.ts",
-          "operation": "create",
-          "description": "Create hook aggregating all content generation backend methods (generateHooks, generateScripts, generateCaptions). Accept ContentGenerationRequest and call appropriate backend methods based on user's tier from FeatureSet. Return combined content output object for display in ContentOutput component."
-        }
-      ]
-    },
-    {
-      "id": "REQ-21",
-      "summary": "Create content score display with visual indicators for Hook Strength, Retention Potential, and Monetization Potential scores",
-      "acceptanceCriteria": [
-        "Component displays three numeric scores (1-10) with labels",
-        "Scores are visualized with progress bars or gauge indicators",
-        "Virality explanation is displayed as readable text below scores",
-        "Component is only shown to Pro and Elite tier users"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/ContentScoreCard.tsx",
-          "operation": "create",
-          "description": "Create score display component showing Hook Strength Score (1-10), Retention Potential Score (1-10), Monetization Potential Score (1-10) as numeric values with progress bar visualizations. Display Virality Probability Explanation as text below scores. Use shadcn/ui Progress component for score bars. Only render for Pro and Elite users (check FeatureSet). Use card layout with clear labels and color-coded score ranges."
-        }
-      ]
-    },
-    {
-      "id": "REQ-22",
-      "summary": "Create upgrade encouragement component for Free tier users accessing locked features",
-      "acceptanceCriteria": [
-        "Component displays when Free users try to access locked features",
-        "Message clearly explains what features are available in Pro and Elite tiers",
-        "Upgrade button is prominent and links to pricing page",
-        "Design is encouraging without being pushy"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/UpgradePrompt.tsx",
-          "operation": "create",
-          "description": "Create upgrade encouragement component shown to Free tier users when they attempt to access Pro or Elite features. Display friendly message explaining locked feature benefits and tier comparison. Include prominent CTA button linking to /pricing page. Use positive, encouraging tone without pressure. Show feature preview/teaser to build interest."
-        }
-      ]
-    },
-    {
-      "id": "REQ-23",
-      "summary": "Create user dashboard showing subscription tier, features, content history, and new content CTA",
-      "acceptanceCriteria": [
-        "Dashboard displays current tier (Free/Pro/Elite) prominently",
-        "Available features are listed based on tier",
-        "Past content generation requests are displayed in a list or cards",
-        "Primary CTA to create new content is visible",
-        "Users can access previous generated content"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/Dashboard.tsx",
-          "operation": "create",
-          "description": "Create dashboard component displaying current subscription tier from getMySubscription backend method, available features from checkUserTier, and content generation history from getContentRequests. Show tier badge prominently, list enabled features, and display past requests as cards with access to view generated content. Include prominent 'Create New Content' CTA button linking to content generation form. Use grid layout for content history with date and request summary."
-        },
-        {
-          "path": "frontend/src/hooks/useGetMySubscription.ts",
-          "operation": "create",
-          "description": "Create query hook wrapping getMySubscription backend method. Return UserSubscription object with tier and status. Cache result and enable only when user is authenticated."
-        },
-        {
-          "path": "frontend/src/hooks/useGetContentRequests.ts",
-          "operation": "create",
-          "description": "Create query hook wrapping getContentRequests backend method. Return array of ContentGenerationRequest objects representing user's content history. Cache and refetch on window focus."
-        },
-        {
-          "path": "frontend/src/routes/dashboard.tsx",
-          "operation": "create",
-          "description": "Create route file for dashboard at /dashboard path. Wrap Dashboard component with ProtectedRoute to ensure authentication. This is the main app view after login."
-        }
-      ]
-    },
-    {
-      "id": "REQ-24",
-      "summary": "Create subscription management page for viewing plan, upgrading/downgrading tiers, and managing billing",
-      "acceptanceCriteria": [
-        "Page shows current subscription tier and billing cycle",
-        "Users can upgrade to higher tiers",
-        "Users can downgrade to lower tiers",
-        "Page links to Stripe/PayPal portal for payment method management",
-        "Subscription changes are reflected immediately in feature access"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/SubscriptionManagement.tsx",
-          "operation": "create",
-          "description": "Create subscription management component showing current tier and status from getMySubscription. Provide upgrade buttons for higher tiers linking to SubscriptionCheckout with appropriate tier selection. Include downgrade options that call processSubscriptionUpgrade backend method with lower tier. Link to Stripe customer portal for payment method management. Show next billing date and current billing cycle. Invalidate subscription cache after tier changes."
-        },
-        {
-          "path": "frontend/src/routes/subscription.tsx",
-          "operation": "create",
-          "description": "Create route file for subscription management at /subscription path. Wrap SubscriptionManagement component with ProtectedRoute to require authentication."
-        }
-      ]
-    },
-    {
-      "id": "REQ-25",
-      "summary": "Create 7-day content calendar view for Elite tier users with posting recommendations",
-      "acceptanceCriteria": [
-        "Component displays a 7-day calendar grid",
-        "Each day shows recommended content type and timing",
-        "Calendar is only visible to Elite tier users",
-        "Layout is clean and easy to understand at a glance"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/ContentCalendar.tsx",
-          "operation": "create",
-          "description": "Create 7-day micro content calendar component using generateCalendar backend method. Display weekly grid with days as columns. Show recommended content type and posting time for each day. Only render for Elite tier users (check FeatureSet.calendar). Use card-based day layout with clear date headers and content recommendations. Accept ContentGenerationRequest to generate personalized calendar based on user's niche and goals."
-        },
-        {
-          "path": "frontend/src/hooks/useGenerateCalendar.ts",
-          "operation": "create",
-          "description": "Create mutation hook wrapping generateCalendar backend method. Accept ContentGenerationRequest, return calendar data string. Parse response and structure for display in ContentCalendar component."
-        }
-      ]
-    },
-    {
-      "id": "REQ-26",
-      "summary": "Display legal compliance disclaimers on content output pages",
-      "acceptanceCriteria": [
-        "Disclaimer appears on content output pages",
-        "Text states content is original and user-owned",
-        "Text includes no-guarantee language about growth and income",
-        "Disclaimer mentions copyright compliance",
-        "Text is visible but not intrusive"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/LegalDisclaimer.tsx",
-          "operation": "create",
-          "description": "Create disclaimer component stating: 'All generated outputs are newly created original works. End users retain full commercial rights to use generated content. The system does not claim ownership of user ideas. AI assistance does not guarantee growth or income. Generated content avoids copyrighted material and users are responsible for final compliance verification.' Display at bottom of ContentOutput component with muted styling. Use small text, border, and subtle background to be visible but non-intrusive."
-        },
-        {
-          "path": "frontend/src/components/ContentOutput.tsx",
-          "operation": "modify",
-          "description": "Add LegalDisclaimer component at bottom of content output display. Render after all content sections with appropriate spacing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-27",
-      "summary": "Apply cohesive visual design system with modern SaaS aesthetic using distinctive color palette",
-      "acceptanceCriteria": [
-        "Consistent color palette used throughout (no blue/purple unless user specifies)",
-        "Typography hierarchy is clear and professional",
-        "UI components have a cohesive style and polish",
-        "Design feels modern and suitable for content creators",
-        "Layout patterns are consistent across pages"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/index.css",
-          "operation": "modify",
-          "description": "Define brand color palette using CSS custom properties with distinctive colors (avoiding blue/purple). Use warm, energetic colors suitable for content creators (e.g., amber, emerald, coral accents). Set typography scale with clear hierarchy using modern sans-serif fonts. Define consistent spacing scale, border radius tokens, and shadow utilities. Establish base styling for interactive elements (buttons, inputs, cards) to ensure polish and cohesion across the application."
-        },
-        {
-          "path": "frontend/tailwind.config.js",
-          "operation": "modify",
-          "description": "Extend Tailwind theme with custom color palette matching the distinctive brand colors from index.css. Configure typography plugin with professional scale. Set custom spacing and sizing tokens. Define component-specific utilities for buttons, cards, and forms to maintain design consistency. Use colors that convey credibility and creative energy without relying on typical blue/purple SaaS schemes."
+          "description": "Add a route for '/stripe-setup' that renders the StripeSetup page. Ensure this route is only accessible to authenticated admin users by using the authorization component's role checks."
         },
         {
           "path": "frontend/src/components/Layout.tsx",
+          "operation": "modify",
+          "description": "Add a conditional navigation link to 'Stripe Setup' in the navigation menu that only appears for authenticated admin users. Use isCallerAdmin() to determine visibility."
+        }
+      ]
+    },
+    {
+      "id": "REQ-32",
+      "summary": "Update PricingPage to initiate Stripe checkout when authenticated user selects paid tier, redirecting to Stripe-hosted checkout",
+      "acceptanceCriteria": [
+        "Clicking 'Select Plan' for Pro or Elite tier calls the backend checkout session endpoint",
+        "Redirects user to the returned Stripe checkout URL",
+        "Shows loading state while creating the checkout session",
+        "Displays error message if checkout session creation fails",
+        "Free tier selection routes to dashboard without payment flow"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useStripeCheckout.ts",
           "operation": "create",
-          "description": "Create main layout component wrapping all application pages. Include header with navigation (Dashboard, Pricing, Subscription), LoginButton, and user profile indicator. Include footer with legal links. Apply consistent spacing, background treatments, and navigation patterns. Use the established design system from index.css for cohesive styling across all pages."
+          "description": "Create a custom React Query mutation hook useCreateStripeCheckoutSession that wraps createCheckoutSession(). Accept a tier parameter (Pro or Elite) and convert it to ShoppingItem[] format with appropriate pricing. Parse the JSON response to extract the CheckoutSession with id and url fields. Validate that session.url exists before returning. Include proper error handling for missing actor, parsing failures, and missing URL. Set success and cancel URLs using window.location origin combined with '/payment-success' and '/payment-failure' paths."
         },
         {
-          "path": "frontend/src/routes/__root.tsx",
+          "path": "frontend/src/pages/PricingPage.tsx",
           "operation": "modify",
-          "description": "Wrap all route outlets with Layout component to ensure consistent navigation, header, and footer across all pages. Include QueryClientProvider and Internet Identity provider wrappers at root level."
+          "description": "Import and use useCreateStripeCheckoutSession hook. Update the 'Select Plan' button handlers for Pro and Elite tiers to call the mutation with the selected tier. Show loading state with disabled button and spinner while mutating. On success, redirect to session.url using window.location.href (not router navigation). Display toast error message if checkout fails. For Free tier, keep existing routing to dashboard. Ensure users must be authenticated before initiating checkout by checking authentication state."
+        }
+      ]
+    },
+    {
+      "id": "REQ-33",
+      "summary": "Update SubscriptionManagement page to display Stripe subscription details and add Manage Billing button that opens Stripe customer portal",
+      "acceptanceCriteria": [
+        "Shows current subscription tier with Stripe billing status (active, past_due, canceled)",
+        "Displays next billing date for active subscriptions",
+        "Manage Billing button calls backend to create customer portal session",
+        "Redirects user to Stripe portal where they can update payment methods and cancel",
+        "Shows appropriate messaging for users without active Stripe subscriptions"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add a new React Query mutation hook useGetCustomerPortalUrl that calls a backend capability to generate a Stripe customer portal session URL. The hook should parse the JSON response to extract the portal URL and handle errors appropriately. Note: Verify the stripe component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/SubscriptionManagement.tsx",
+          "operation": "modify",
+          "description": "Import and use useGetCustomerPortalUrl mutation. Display the current subscription status and tier from getMySubscription(). Show billing status using the subscription.status field (active, pending, cancelled). Add a 'Manage Billing' button that calls the customer portal mutation and redirects to the returned portal URL using window.location.href. Show loading state while creating portal session. Display appropriate messages for users without active subscriptions. Include conditional rendering based on subscription status. Use the stripe component to support billing management functionality."
         }
       ]
     }

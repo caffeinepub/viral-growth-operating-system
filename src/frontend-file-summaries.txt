@@ -1,20 +1,21 @@
 {
-  "frontend/src/App.tsx": "Main application component with TanStack Router setup, theme provider, and route definitions for all pages including landing, pricing, dashboard, content generator, subscription management, and payment success/failure pages.",
-  "frontend/src/components/Layout.tsx": "Root layout component with responsive header navigation, mobile menu, login button, and footer with caffeine.ai attribution and dynamic year.",
+  "frontend/src/App.tsx": "Main application component with TanStack Router setup including all routes (landing, pricing, dashboard, subscription, content generator, payment success/failure, and new Stripe setup page) with theme provider and toast notifications.",
+  "frontend/src/components/Layout.tsx": "Root layout component with responsive header navigation including conditional Stripe Setup link for admins, mobile menu, login button, and footer with caffeine.ai attribution.",
   "frontend/src/components/ProfileSetupModal.tsx": "Modal dialog for first-time user profile setup that appears after authentication if no profile exists, collecting name and email with proper loading state handling.",
   "frontend/src/components/UpgradePrompt.tsx": "Reusable component displaying locked feature prompts for Free tier users with upgrade CTA linking to pricing page.",
   "frontend/src/components/ContentScoreCard.tsx": "Card component displaying content performance scores (hook strength, retention potential, monetization potential) with progress bars and virality explanation.",
   "frontend/src/components/LegalDisclaimer.tsx": "Alert component displaying legal notice about content ownership, copyright compliance, and no-guarantee language.",
   "frontend/src/components/ContentOutput.tsx": "Comprehensive content display component showing all 10 generated content sections with tier-based feature gating and upgrade prompts for locked features.",
   "frontend/src/pages/LandingPage.tsx": "Marketing landing page explaining platform value proposition with hero section, features grid, workflow explanation, and CTA sections.",
-  "frontend/src/pages/PricingPage.tsx": "Subscription tier comparison page displaying Free, Pro, and Elite plans with feature lists, pricing, and upgrade CTAs.",
+  "frontend/src/pages/PricingPage.tsx": "Subscription tier comparison page with Free, Pro, and Elite plans that initiates Stripe checkout for paid tiers using TierLevel enum values with loading states and proper error handling.",
   "frontend/src/pages/Dashboard.tsx": "User dashboard showing current subscription tier, available features, and content generation history with quick access to create new content.",
   "frontend/src/pages/ContentGenerator.tsx": "Content generation form page collecting tone, audience, platform, niche, and goal inputs with validation and displaying generated content output.",
-  "frontend/src/pages/SubscriptionManagement.tsx": "Subscription management page showing current plan, billing information, and upgrade options with feature comparison.",
+  "frontend/src/pages/SubscriptionManagement.tsx": "Subscription management page displaying current plan, billing status, upgrade options, and Manage Billing button for Stripe customer portal access.",
   "frontend/src/pages/PaymentSuccess.tsx": "Payment success confirmation page with CTA to dashboard and content generator, invalidating subscription cache to refetch updated tier.",
   "frontend/src/pages/PaymentFailure.tsx": "Payment cancellation page with options to retry or return to pricing/dashboard.",
   "frontend/src/hooks/useGetCallerUserProfile.ts": "React Query hook for fetching current user profile with proper actor dependency handling to prevent modal flash.",
-  "frontend/src/hooks/useQueries.ts": "Collection of React Query hooks for all backend operations including profile management, subscription queries, feature set checking, content requests, and content generation with mock data fallback.",
+  "frontend/src/hooks/useQueries.ts": "Collection of React Query hooks for all backend operations including profile management, subscription queries, feature checks, content generation, admin checks, Stripe configuration, and checkout session creation with proper JSON parsing and TierLevel enum handling.",
   "frontend/src/index.css": "Global styles with warm, energetic OKLCH color system featuring coral-orange primary colors and vibrant chart colors suitable for content creators, with both light and dark mode support.",
-  "frontend/tailwind.config.js": "Tailwind configuration extending theme with custom color palette, Inter font family, custom shadows including glow effects, and fade-in animation."
+  "frontend/tailwind.config.js": "Tailwind configuration extending theme with custom color palette, Inter font family, custom shadows including glow effects, and fade-in animation.",
+  "frontend/src/pages/StripeSetup.tsx": "Admin-only Stripe configuration page with form for entering secret key and allowed countries, validation, instructions linking to Stripe dashboard, and security notes."
 }

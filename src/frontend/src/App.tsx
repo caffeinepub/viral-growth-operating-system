@@ -8,6 +8,7 @@ import SubscriptionManagement from './pages/SubscriptionManagement';
 import ContentGenerator from './pages/ContentGenerator';
 import PaymentSuccess from './pages/PaymentSuccess';
 import PaymentFailure from './pages/PaymentFailure';
+import StripeSetup from './pages/StripeSetup';
 import { Toaster } from '@/components/ui/sonner';
 
 const rootRoute = createRootRoute({
@@ -56,6 +57,12 @@ const paymentFailureRoute = createRoute({
   component: PaymentFailure,
 });
 
+const stripeSetupRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/stripe-setup',
+  component: StripeSetup,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   pricingRoute,
@@ -64,6 +71,7 @@ const routeTree = rootRoute.addChildren([
   generateRoute,
   paymentSuccessRoute,
   paymentFailureRoute,
+  stripeSetupRoute,
 ]);
 
 const router = createRouter({ routeTree });

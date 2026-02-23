@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import type { UserProfile, UserSubscription, FeatureSet, ContentGenerationRequest } from '../backend';
+import type { UserProfile, UserSubscription, FeatureSet, ContentGenerationRequest, TierLevel, ShoppingItem, StripeConfiguration } from '../backend';
 import { toast } from 'sonner';
 
 export function useSaveCallerUserProfile() {
@@ -131,6 +131,100 @@ export function useGenerateContent() {
           viralityExplanation: "Strong hooks with curiosity gaps and pattern interrupts. Scripts leverage storytelling and authority. High monetization potential through educational positioning. Recommended improvements: Add more specific data points and personal transformation stories for increased retention.",
         },
       };
+    },
+  });
+}
+
+export function useIsCallerAdmin() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<boolean>({
+    queryKey: ['isAdmin'],
+    queryFn: async () => {
+      if (!actor) return false;
+      return actor.isCallerAdmin();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useIsStripeConfigured() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<boolean>({
+    queryKey: ['stripeConfigured'],
+    queryFn: async () => {
+      if (!actor) return false;
+      return actor.isStripeConfigured();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useSetStripeConfiguration() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (config: StripeConfiguration) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.setStripeConfiguration(config);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['stripeConfigured'] });
+    },
+  });
+}
+
+export type CheckoutSession = {
+  id: string;
+  url: string;
+};
+
+export function useCreateStripeCheckoutSession() {
+  const { actor } = useActor();
+
+  return useMutation({
+    mutationFn: async (tier: TierLevel): Promise<CheckoutSession> => {
+      if (!actor) throw new Error('Actor not available');
+
+      // Convert tier to ShoppingItem
+      const items: ShoppingItem[] = [];
+      
+      if (tier === 'pro') {
+        items.push({
+          productName: 'Pro Subscription',
+          productDescription: 'Monthly Pro tier subscription with full content generation features',
+          priceInCents: BigInt(2900), // $29.00
+          quantity: BigInt(1),
+          currency: 'usd',
+        });
+      } else if (tier === 'elite') {
+        items.push({
+          productName: 'Elite Subscription',
+          productDescription: 'Monthly Elite tier subscription with all premium features',
+          priceInCents: BigInt(7900), // $79.00
+          quantity: BigInt(1),
+          currency: 'usd',
+        });
+      } else {
+        throw new Error('Invalid tier for checkout');
+      }
+
+      const baseUrl = `${window.location.protocol}//${window.location.host}`;
+      const successUrl = `${baseUrl}/payment-success`;
+      const cancelUrl = `${baseUrl}/payment-failure`;
+
+      const result = await actor.createCheckoutSession(items, successUrl, cancelUrl);
+      
+      // Parse JSON response
+      const session = JSON.parse(result) as CheckoutSession;
+      
+      if (!session?.url) {
+        throw new Error('Stripe session missing url');
+      }
+
+      return session;
     },
   });
 }

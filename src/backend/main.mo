@@ -3,15 +3,17 @@ import Array "mo:core/Array";
 import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
 import AccessControl "authorization/access-control";
+import OutCall "http-outcalls/outcall";
 import MixinAuthorization "authorization/MixinAuthorization";
 import Stripe "stripe/stripe";
-import OutCall "http-outcalls/outcall";
+import Iter "mo:core/Iter";
+import Migration "migration";
 
+(with migration = Migration.run)
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
 
-  // Subscription types
   public type TierLevel = {
     #free;
     #pro;
@@ -27,6 +29,7 @@ actor {
   public type UserSubscription = {
     tier : TierLevel;
     status : SubscriptionStatus;
+    customerId : ?Text;
   };
 
   public type FeatureSet = {
@@ -50,21 +53,9 @@ actor {
     goal : Text;
   };
 
-  public type ContentOutput = {
-    hooks : [Text];
-    scripts : [Text];
-    captions : [Text];
-    hashtags : [Text];
-    monetizationAngles : [Text];
-    psychTriggers : Text;
-    postingRecommendation : Text;
-    painPoints : [Text];
-    scores : {
-      hookStrength : Nat;
-      retentionPotential : Nat;
-      monetizationPotential : Nat;
-      viralityExplanation : Text;
-    };
+  public type UserProfile = {
+    name : Text;
+    email : Text;
   };
 
   public type BrandVoiceProfile = {
@@ -73,9 +64,9 @@ actor {
     consistency : Text;
   };
 
-  public type UserProfile = {
-    name : Text;
-    email : Text;
+  public type WebhookEventType = {
+    #checkoutSessionCompleted;
+    #customerSubscriptionUpdated;
   };
 
   let userSubscriptions = Map.empty<Principal, UserSubscription>();
@@ -182,7 +173,11 @@ actor {
     };
     userSubscriptions.add(
       user,
-      { tier; status },
+      {
+        tier;
+        status;
+        customerId = null;
+      },
     );
   };
 
@@ -191,6 +186,45 @@ actor {
       Runtime.trap("Unauthorized: Only users can check subscription");
     };
     userSubscriptions.get(caller);
+  };
+
+  public shared ({ caller }) func processWebhook(eventType : WebhookEventType, principalText : Text, tier : ?TierLevel, customerId : ?Text) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can process webhooks");
+    };
+    let principal = Principal.fromText(principalText);
+    switch (eventType) {
+      case (#checkoutSessionCompleted) {
+        switch (tier) {
+          case (?tierData) {
+            userSubscriptions.add(
+              principal,
+              {
+                tier = tierData;
+                status = #active;
+                customerId;
+              },
+            );
+          };
+          case (null) { Runtime.trap("Tier must be specified for checkout completion") };
+        };
+      };
+      case (#customerSubscriptionUpdated) {
+        switch (userSubscriptions.get(principal)) {
+          case (?subscription) {
+            userSubscriptions.add(
+              principal,
+              {
+                tier = subscription.tier;
+                status = #cancelled;
+                customerId;
+              },
+            );
+          };
+          case (null) { Runtime.trap("No existing subscription found for principal") };
+        };
+      };
+    };
   };
 
   public query ({ caller }) func getBrandVoiceProfile() : async ?BrandVoiceProfile {
@@ -223,7 +257,14 @@ actor {
       Runtime.trap("Unauthorized: Only admins can process subscription upgrades");
     };
     let status : SubscriptionStatus = #active;
-    userSubscriptions.add(user, { tier = newTier; status });
+    userSubscriptions.add(
+      user,
+      {
+        tier = newTier;
+        status;
+        customerId = null;
+      },
+    );
   };
 
   public query ({ caller }) func getContentRequests() : async [ContentGenerationRequest] {
@@ -244,11 +285,16 @@ actor {
       case (null) { [] };
       case (?requests) { requests };
     };
-    let newRequests = existingRequests.concat([request]);
-    contentRequests.add(caller, newRequests);
+    contentRequests.add(
+      caller,
+      existingRequests.concat([request]),
+    );
   };
 
-  public func getStripeSessionStatus(sessionId : Text) : async Stripe.StripeSessionStatus {
+  public shared ({ caller }) func getStripeSessionStatus(sessionId : Text) : async Stripe.StripeSessionStatus {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can check session status");
+    };
     switch (stripeConfig) {
       case (null) { Runtime.trap("Stripe not configured") };
       case (?config) {
@@ -258,6 +304,9 @@ actor {
   };
 
   public shared ({ caller }) func createCheckoutSession(items : [Stripe.ShoppingItem], successUrl : Text, cancelUrl : Text) : async Text {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can create checkout sessions");
+    };
     switch (stripeConfig) {
       case (null) { Runtime.trap("Stripe not configured") };
       case (?config) {
@@ -279,8 +328,7 @@ actor {
         switch (subscription.tier) {
           case (#free) { feature == "hooks" };
           case (#pro) {
-            feature == "hooks" or feature == "scripts" or feature == "captions" or
-            feature == "hashtags" or feature == "contentScore" or feature == "affiliateSuggestions";
+            feature == "hooks" or feature == "scripts" or feature == "captions" or feature == "hashtags" or feature == "contentScore" or feature == "affiliateSuggestions";
           };
           case (#elite) { true };
         };

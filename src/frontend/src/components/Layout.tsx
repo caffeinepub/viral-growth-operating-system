@@ -1,13 +1,16 @@
 import { Outlet, useNavigate } from '@tanstack/react-router';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
+import { useIsCallerAdmin } from '../hooks/useQueries';
 import { Button } from '@/components/ui/button';
 import { Sparkles, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import ProfileSetupModal from './ProfileSetupModal';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function Layout() {
   const navigate = useNavigate();
   const { identity } = useInternetIdentity();
+  const { data: isAdmin } = useIsCallerAdmin();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isAuthenticated = !!identity;
 
@@ -52,6 +55,14 @@ export default function Layout() {
                 >
                   Subscription
                 </button>
+                {isAdmin && (
+                  <button
+                    onClick={() => navigate({ to: '/stripe-setup' })}
+                    className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Stripe Setup
+                  </button>
+                )}
               </>
             )}
             <button
@@ -108,6 +119,17 @@ export default function Layout() {
                   >
                     Subscription
                   </button>
+                  {isAdmin && (
+                    <button
+                      onClick={() => {
+                        navigate({ to: '/stripe-setup' });
+                        setMobileMenuOpen(false);
+                      }}
+                      className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors text-left"
+                    >
+                      Stripe Setup
+                    </button>
+                  )}
                 </>
               )}
               <button
@@ -161,7 +183,7 @@ export default function Layout() {
 
 function LoginButton() {
   const { login, clear, loginStatus, identity } = useInternetIdentity();
-  const { invalidateQueries } = useQueryClient();
+  const queryClient = useQueryClient();
 
   const isAuthenticated = !!identity;
   const disabled = loginStatus === 'logging-in';
@@ -169,7 +191,7 @@ function LoginButton() {
   const handleAuth = async () => {
     if (isAuthenticated) {
       await clear();
-      invalidateQueries();
+      queryClient.clear();
     } else {
       try {
         await login();
@@ -194,5 +216,3 @@ function LoginButton() {
     </Button>
   );
 }
-
-import { useQueryClient } from '@tanstack/react-query';

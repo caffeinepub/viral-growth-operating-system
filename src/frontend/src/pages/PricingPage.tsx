@@ -1,28 +1,53 @@
+import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
+import { useCreateStripeCheckoutSession } from '../hooks/useQueries';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Check, Sparkles } from 'lucide-react';
+import { Check, Sparkles, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
+import { TierLevel } from '../backend';
 
 export default function PricingPage() {
   const navigate = useNavigate();
   const { identity } = useInternetIdentity();
+  const createCheckout = useCreateStripeCheckoutSession();
+  const [selectedTier, setSelectedTier] = useState<TierLevel | null>(null);
+
   const isAuthenticated = !!identity;
 
-  const handleSelectTier = (tier: 'free' | 'pro' | 'elite') => {
+  const handleSelectTier = async (tier: TierLevel) => {
     if (!isAuthenticated) {
-      // Redirect to login first
+      toast.error('Please log in to select a plan');
       navigate({ to: '/' });
       return;
     }
     
-    if (tier === 'free') {
+    if (tier === TierLevel.free) {
       navigate({ to: '/dashboard' });
-    } else {
-      navigate({ to: '/subscription', search: { tier } });
+      return;
+    }
+
+    setSelectedTier(tier);
+
+    try {
+      const session = await createCheckout.mutateAsync(tier);
+      
+      if (!session?.url) {
+        throw new Error('Stripe session missing URL');
+      }
+
+      // Redirect to Stripe checkout
+      window.location.href = session.url;
+    } catch (error: any) {
+      console.error('Checkout error:', error);
+      toast.error(error.message || 'Failed to create checkout session');
+      setSelectedTier(null);
     }
   };
+
+  const isLoading = (tier: TierLevel) => selectedTier === tier && createCheckout.isPending;
 
   return (
     <div className="container py-20">
@@ -73,9 +98,17 @@ export default function PricingPage() {
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => handleSelectTier('free')}
+                onClick={() => handleSelectTier(TierLevel.free)}
+                disabled={isLoading(TierLevel.free)}
               >
-                Get Started
+                {isLoading(TierLevel.free) ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  'Get Started'
+                )}
               </Button>
             </CardContent>
           </Card>
@@ -128,9 +161,17 @@ export default function PricingPage() {
               </ul>
               <Button
                 className="w-full bg-gradient-to-r from-chart-1 to-chart-2"
-                onClick={() => handleSelectTier('pro')}
+                onClick={() => handleSelectTier(TierLevel.pro)}
+                disabled={isLoading(TierLevel.pro)}
               >
-                Upgrade to Pro
+                {isLoading(TierLevel.pro) ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  'Upgrade to Pro'
+                )}
               </Button>
             </CardContent>
           </Card>
@@ -175,9 +216,17 @@ export default function PricingPage() {
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => handleSelectTier('elite')}
+                onClick={() => handleSelectTier(TierLevel.elite)}
+                disabled={isLoading(TierLevel.elite)}
               >
-                Upgrade to Elite
+                {isLoading(TierLevel.elite) ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  'Upgrade to Elite'
+                )}
               </Button>
             </CardContent>
           </Card>

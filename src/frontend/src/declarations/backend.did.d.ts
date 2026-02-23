@@ -71,7 +71,10 @@ export type UserRole = { 'admin' : null } |
 export interface UserSubscription {
   'status' : SubscriptionStatus,
   'tier' : TierLevel,
+  'customerId' : [] | [string],
 }
+export type WebhookEventType = { 'checkoutSessionCompleted' : null } |
+  { 'customerSubscriptionUpdated' : null };
 export interface http_header { 'value' : string, 'name' : string }
 export interface http_request_result {
   'status' : bigint,
@@ -101,6 +104,10 @@ export interface _SERVICE {
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'isStripeConfigured' : ActorMethod<[], boolean>,
   'processSubscriptionUpgrade' : ActorMethod<[Principal, TierLevel], undefined>,
+  'processWebhook' : ActorMethod<
+    [WebhookEventType, string, [] | [TierLevel], [] | [string]],
+    undefined
+  >,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'setBrandVoiceProfile' : ActorMethod<[BrandVoiceProfile], undefined>,
   'setStripeConfiguration' : ActorMethod<[StripeConfiguration], undefined>,

@@ -4,7 +4,7 @@ import { useGetMySubscription } from '../hooks/useQueries';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Sparkles, CreditCard, ArrowUpCircle } from 'lucide-react';
+import { Sparkles, CreditCard, ArrowUpCircle, ExternalLink } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function SubscriptionManagement() {
@@ -25,6 +25,8 @@ export default function SubscriptionManagement() {
 
   const tierName = subscription?.tier ? String(subscription.tier) : 'free';
   const tierDisplay = tierName.charAt(0).toUpperCase() + tierName.slice(1);
+  const statusName = subscription?.status ? String(subscription.status) : 'active';
+  const statusDisplay = statusName.charAt(0).toUpperCase() + statusName.slice(1);
 
   const getTierColor = (tier: string) => {
     switch (tier) {
@@ -35,6 +37,24 @@ export default function SubscriptionManagement() {
       default:
         return 'bg-muted';
     }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'active':
+        return 'text-chart-4';
+      case 'cancelled':
+        return 'text-destructive';
+      case 'pending':
+        return 'text-chart-3';
+      default:
+        return 'text-muted-foreground';
+    }
+  };
+
+  const handleManageBilling = () => {
+    // Open Stripe customer portal
+    window.open('https://billing.stripe.com/p/login/test_00000000000000', '_blank');
   };
 
   return (
@@ -70,8 +90,8 @@ export default function SubscriptionManagement() {
             <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50">
               <div>
                 <p className="font-medium">Status</p>
-                <p className="text-sm text-muted-foreground">
-                  {subscription?.status ? String(subscription.status) : 'Active'}
+                <p className={`text-sm ${getStatusColor(statusName)}`}>
+                  {statusDisplay}
                 </p>
               </div>
               <div className="text-right">
@@ -106,22 +126,23 @@ export default function SubscriptionManagement() {
         </Card>
 
         {/* Billing Information */}
-        {tierName !== 'free' && (
+        {tierName !== 'free' && subscription?.customerId && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <CreditCard className="w-5 h-5" />
                 Billing Information
               </CardTitle>
-              <CardDescription>Manage your payment methods</CardDescription>
+              <CardDescription>Manage your payment methods and invoices</CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground mb-4">
                 Payment processing is handled securely by Stripe. Click below to manage your payment methods,
-                view invoices, or update billing information.
+                view invoices, update billing information, or cancel your subscription.
               </p>
-              <Button variant="outline">
-                Manage Payment Methods
+              <Button variant="outline" onClick={handleManageBilling}>
+                <ExternalLink className="w-4 h-4 mr-2" />
+                Manage Billing
               </Button>
             </CardContent>
           </Card>

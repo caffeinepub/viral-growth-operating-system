@@ -61,6 +61,7 @@ export const TierLevel = IDL.Variant({
 export const UserSubscription = IDL.Record({
   'status' : SubscriptionStatus,
   'tier' : TierLevel,
+  'customerId' : IDL.Opt(IDL.Text),
 });
 export const StripeSessionStatus = IDL.Variant({
   'completed' : IDL.Record({
@@ -68,6 +69,10 @@ export const StripeSessionStatus = IDL.Variant({
     'response' : IDL.Text,
   }),
   'failed' : IDL.Record({ 'error' : IDL.Text }),
+});
+export const WebhookEventType = IDL.Variant({
+  'checkoutSessionCompleted' : IDL.Null,
+  'customerSubscriptionUpdated' : IDL.Null,
 });
 export const StripeConfiguration = IDL.Record({
   'allowedCountries' : IDL.Vec(IDL.Text),
@@ -140,6 +145,11 @@ export const idlService = IDL.Service({
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'isStripeConfigured' : IDL.Func([], [IDL.Bool], ['query']),
   'processSubscriptionUpgrade' : IDL.Func([IDL.Principal, TierLevel], [], []),
+  'processWebhook' : IDL.Func(
+      [WebhookEventType, IDL.Text, IDL.Opt(TierLevel), IDL.Opt(IDL.Text)],
+      [],
+      [],
+    ),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   'setBrandVoiceProfile' : IDL.Func([BrandVoiceProfile], [], []),
   'setStripeConfiguration' : IDL.Func([StripeConfiguration], [], []),
@@ -208,6 +218,7 @@ export const idlFactory = ({ IDL }) => {
   const UserSubscription = IDL.Record({
     'status' : SubscriptionStatus,
     'tier' : TierLevel,
+    'customerId' : IDL.Opt(IDL.Text),
   });
   const StripeSessionStatus = IDL.Variant({
     'completed' : IDL.Record({
@@ -215,6 +226,10 @@ export const idlFactory = ({ IDL }) => {
       'response' : IDL.Text,
     }),
     'failed' : IDL.Record({ 'error' : IDL.Text }),
+  });
+  const WebhookEventType = IDL.Variant({
+    'checkoutSessionCompleted' : IDL.Null,
+    'customerSubscriptionUpdated' : IDL.Null,
   });
   const StripeConfiguration = IDL.Record({
     'allowedCountries' : IDL.Vec(IDL.Text),
@@ -284,6 +299,11 @@ export const idlFactory = ({ IDL }) => {
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'isStripeConfigured' : IDL.Func([], [IDL.Bool], ['query']),
     'processSubscriptionUpgrade' : IDL.Func([IDL.Principal, TierLevel], [], []),
+    'processWebhook' : IDL.Func(
+        [WebhookEventType, IDL.Text, IDL.Opt(TierLevel), IDL.Opt(IDL.Text)],
+        [],
+        [],
+      ),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
     'setBrandVoiceProfile' : IDL.Func([BrandVoiceProfile], [], []),
     'setStripeConfiguration' : IDL.Func([StripeConfiguration], [], []),

@@ -71,6 +71,7 @@ export type StripeSessionStatus = {
 export interface UserSubscription {
     status: SubscriptionStatus;
     tier: TierLevel;
+    customerId?: string;
 }
 export interface StripeConfiguration {
     allowedCountries: Array<string>;
@@ -95,6 +96,10 @@ export enum UserRole {
     user = "user",
     guest = "guest"
 }
+export enum WebhookEventType {
+    checkoutSessionCompleted = "checkoutSessionCompleted",
+    customerSubscriptionUpdated = "customerSubscriptionUpdated"
+}
 export interface backendInterface {
     addContentRequest(request: ContentGenerationRequest): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
@@ -114,6 +119,7 @@ export interface backendInterface {
     isCallerAdmin(): Promise<boolean>;
     isStripeConfigured(): Promise<boolean>;
     processSubscriptionUpgrade(user: Principal, newTier: TierLevel): Promise<void>;
+    processWebhook(eventType: WebhookEventType, principalText: string, tier: TierLevel | null, customerId: string | null): Promise<void>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     setBrandVoiceProfile(profile: BrandVoiceProfile): Promise<void>;
     setStripeConfiguration(config: StripeConfiguration): Promise<void>;

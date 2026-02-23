@@ -1,545 +1,160 @@
 {
   "kind": "build_request",
-  "title": "Build AI Viral Growth Operating System for Content Creators",
-  "projectName": "Viral Growth OS",
+  "title": "Implement Stripe payment integration with user setup flow",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-1",
-      "text": "Create backend data model for user subscription tiers (Free, Pro, Elite) with fields for tier level, subscription status, and feature access permissions",
+      "id": "REQ-28",
+      "text": "Create a Stripe checkout session endpoint in the backend that accepts a tier parameter (Pro or Elite) and returns a Stripe checkout URL, handling session creation with the Internet Identity principal as the customer identifier",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-last"
+        ],
+        "quotes": [
+          "Ok lets go with stripe"
         ]
       },
       "acceptanceCriteria": [
-        "User record stores current subscription tier (Free/Pro/Elite)",
-        "Subscription status is tracked (active/inactive)",
-        "Feature access is queryable based on tier"
+        "Backend function accepts tier parameter and validates it is either Pro or Elite",
+        "Function creates a Stripe checkout session with the appropriate pricing for the selected tier",
+        "Uses the caller's Internet Identity principal as the customer reference",
+        "Returns a checkout URL that redirects to PaymentSuccess on success and PaymentFailure on cancellation",
+        "Includes subscription metadata (tier, userId) in the Stripe session"
       ]
     },
     {
-      "id": "REQ-2",
-      "text": "Implement backend query function to check user tier and return available feature set based on tier access rules: Free (3 hooks only), Pro (hooks, scripts, captions, hashtags, 1 monetization angle, content score), Elite (full suite including 2 monetization angles, 7-day calendar, niche roadmap, affiliate suggestions, faceless version)",
+      "id": "REQ-29",
+      "text": "Create a Stripe webhook handler endpoint in the backend that processes checkout.session.completed events to update user subscription status and tier in the backend data model",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-last"
         ],
         "quotes": [
-          "FREE USER: - 3 hooks only - No scripts - No monetization - Show upgrade encouragement message",
-          "PRO USER: - Hooks - Scripts - Captions - Hashtags - 1 monetization angle - Content performance score",
-          "ELITE USER: - Full content suite - 2 monetization angles - 7-day micro content calendar - Niche domination roadmap - Affiliate revenue suggestions - Content score analysis - Faceless adaptation version"
+          "Ok lets go with stripe"
         ]
       },
       "acceptanceCriteria": [
-        "Query function accepts user ID and returns tier level",
-        "Function returns list of enabled features for the user's tier",
-        "Free users are limited to 3 hooks with upgrade prompts",
-        "Pro users receive hooks, scripts, captions, hashtags, 1 monetization angle, and content score",
-        "Elite users receive all features including 2 monetization angles, calendar, roadmap, and faceless version"
+        "Webhook endpoint verifies Stripe signature for security",
+        "Processes checkout.session.completed events to activate subscriptions",
+        "Updates user's subscription tier and status in backend storage",
+        "Maps Stripe customer ID to Internet Identity principal for future reference",
+        "Handles subscription renewal events to maintain active status"
       ]
     },
     {
-      "id": "REQ-3",
-      "text": "Create backend data model for content generation requests with fields for tone, audience, platform, niche, and goal as input parameters",
+      "id": "REQ-30",
+      "text": "Add backend functions to retrieve Stripe publishable key and create a customer portal session URL for authenticated users to manage their billing",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-last"
         ],
         "quotes": [
-          "For given: Tone: Audience: Platform: Niche: Goal:"
+          "Ok lets go with stripe"
         ]
       },
       "acceptanceCriteria": [
-        "Content request stores tone, audience, platform, niche, and goal fields",
-        "All fields accept text input",
-        "Request is associated with a user ID"
+        "Query function returns Stripe publishable key for frontend initialization",
+        "Function creates Stripe customer portal session for authenticated users",
+        "Portal session allows users to update payment methods and view invoices",
+        "Returns portal URL that redirects back to subscription management page"
       ]
     },
     {
-      "id": "REQ-4",
-      "text": "Implement backend data model for generated content outputs including hooks (array of text), scripts (array of text), captions (array of text), hashtag clusters (array of text), monetization angles (array of text), psychological triggers (text), posting frequency recommendation (text), audience pain points (array of text), and content scores (hook strength 1-10, retention potential 1-10, monetization potential 1-10, virality explanation text)",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "1. 5 Scroll-Stopping Hooks (under 8 seconds spoken) 2. 3 Original 30–45 second Scripts 3. 5 Engagement Captions 4. 5 Hashtag Clusters (non-trademarked) 5. Monetization Angles 6. Psychological Trigger Breakdown 7. Posting Frequency Recommendation 8. Audience Pain Points 9. Content Score Report",
-          "Hook Strength Score (1–10) - Retention Potential Score (1–10) - Monetization Potential Score (1–10) - Virality Probability Explanation"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Content output model stores all 10 content components",
-        "Hooks limited to 5 items, scripts to 3 items, captions to 5 items, hashtag clusters to 5 items",
-        "Content scores use numeric fields (1-10 range) for hook strength, retention potential, and monetization potential",
-        "Virality explanation stored as text field",
-        "Output is linked to the generating user and their tier"
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Create backend function to generate 5 scroll-stopping hooks under 8 seconds spoken length based on input parameters (tone, audience, platform, niche, goal) while ensuring 100% originality and avoiding copyrighted phrases, brand taglines, or specific influencer mimicry",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "1. 5 Scroll-Stopping Hooks (under 8 seconds spoken)",
-          "Never copy, rewrite, paraphrase, or closely mimic any real creator. - Never reproduce song lyrics, trademark phrases, brand taglines, or copyrighted scripts."
-        ]
-      },
-      "acceptanceCriteria": [
-        "Function returns exactly 5 unique hooks",
-        "Each hook is designed for under 8 seconds spoken delivery",
-        "Hooks are original and avoid copyrighted or trademarked content",
-        "Hooks adapt to the specified tone, audience, platform, niche, and goal"
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "text": "Create backend function to generate 3 original 30-45 second scripts based on input parameters, ensuring full originality and transformative content that uses trend structure only without copying specific wording or phrasing from existing creators",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "2. 3 Original 30–45 second Scripts",
-          "Use trend STRUCTURE only — never wording, never identifiable phrasing. - All output must be fully original and transformative."
-        ]
-      },
-      "acceptanceCriteria": [
-        "Function returns exactly 3 unique scripts",
-        "Each script is 30-45 seconds in spoken length",
-        "Scripts are 100% original and do not copy existing creator content",
-        "Scripts adapt trend structures without replicating specific phrasing"
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "text": "Create backend function to generate 5 engagement captions and 5 non-trademarked hashtag clusters optimized for the specified platform and niche",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "3. 5 Engagement Captions 4. 5 Hashtag Clusters (non-trademarked)"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Function returns exactly 5 unique engagement captions",
-        "Function returns exactly 5 hashtag clusters",
-        "Hashtags avoid trademarked terms",
-        "Content is optimized for the user's specified platform"
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "text": "Create backend function to generate monetization angles (1 for Pro tier, 2 for Elite tier) suggesting digital product ideas, affiliate positioning angles, low-ticket and high-ticket funnels, brand deal positioning, and call-to-action structure without making financial guarantees",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "Suggest: - Digital product ideas - Affiliate positioning angles - Low-ticket and high-ticket funnels - Brand deal positioning - Call-to-action structure",
-          "No financial guarantees."
-        ]
-      },
-      "acceptanceCriteria": [
-        "Function generates 1 monetization angle for Pro users",
-        "Function generates 2 monetization angles for Elite users",
-        "Suggestions include digital products, affiliate angles, funnels, brand deals, and CTAs",
-        "Output avoids making income guarantees"
-      ]
-    },
-    {
-      "id": "REQ-9",
-      "text": "Create backend function to calculate and return content performance scores: Hook Strength Score (1-10), Retention Potential Score (1-10), Monetization Potential Score (1-10), and Virality Probability Explanation based on the generated content",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "After generating scripts, provide: - Hook Strength Score (1–10) - Retention Potential Score (1–10) - Monetization Potential Score (1–10) - Virality Probability Explanation"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Function returns numeric scores (1-10) for hook strength, retention potential, and monetization potential",
-        "Function returns text explanation for virality probability",
-        "Scores are available to Pro and Elite tier users"
-      ]
-    },
-    {
-      "id": "REQ-10",
-      "text": "Create backend function to generate psychological trigger breakdown, posting frequency recommendation, and audience pain points analysis based on input parameters",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "6. Psychological Trigger Breakdown 7. Posting Frequency Recommendation 8. Audience Pain Points"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Function analyzes and returns psychological triggers used in content",
-        "Function provides posting frequency recommendation",
-        "Function identifies and returns audience pain points",
-        "Output is clear and actionable"
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "text": "Create backend function to generate 7-day micro content calendar with posting schedule for Elite tier users",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "ELITE USER: - 7-day micro content calendar"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Function generates a 7-day content posting calendar",
-        "Calendar is only available to Elite tier users",
-        "Calendar includes recommended content types and timing"
-      ]
-    },
-    {
-      "id": "REQ-12",
-      "text": "Create backend function to generate niche domination roadmap and faceless content adaptation version for Elite tier users",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "ELITE USER: - Niche domination roadmap - Faceless adaptation version"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Function generates strategic niche domination roadmap",
-        "Function provides faceless content adaptation of generated scripts",
-        "Both features are restricted to Elite tier users"
-      ]
-    },
-    {
-      "id": "REQ-13",
-      "text": "Create backend function to generate and store brand voice profile based on user input analysis, maintaining consistent personality (beginner, expert, luxury, edgy, soft) across all content outputs for a user",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "2️⃣ BRAND VOICE MEMORY MODE - Analyze user input tone. - Maintain consistent brand personality across outputs. - Adapt language to match beginner, expert, luxury, edgy, or soft tone."
-        ]
-      },
-      "acceptanceCriteria": [
-        "Function analyzes user input to determine brand voice profile",
-        "Profile is stored and associated with user account",
-        "All content generation respects stored brand voice",
-        "Supported voice types: beginner, expert, luxury, edgy, soft"
-      ]
-    },
-    {
-      "id": "REQ-14",
-      "text": "Build authentication system using Internet Identity to identify users and link them to their subscription tier and content generation history",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Users can authenticate using Internet Identity",
-        "User principal is stored and linked to subscription data",
-        "Authentication state persists across sessions",
-        "User's tier and content history are accessible after login"
-      ]
-    },
-    {
-      "id": "REQ-15",
-      "text": "Integrate Stripe payment processing for recurring monthly subscriptions with support for Pro and Elite tier upgrades and downgrades, storing subscription status in backend without storing financial data",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "Stripe for recurring subscriptions and card payments. - PayPal for one-click checkout convenience. - Monthly subscription billing. - Upgrade/downgrade tier switching.",
-          "Never process payments directly. Never store financial data."
-        ]
-      },
-      "acceptanceCriteria": [
-        "Stripe integration handles recurring monthly billing",
-        "Users can upgrade from Free to Pro or Elite",
-        "Users can downgrade between tiers",
-        "Subscription status updates backend user tier without storing card details",
-        "Payment processing is handled externally by Stripe"
-      ]
-    },
-    {
-      "id": "REQ-16",
-      "text": "Integrate PayPal payment processing as an alternative checkout option for subscriptions with same tier management as Stripe",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "PayPal for one-click checkout convenience."
-        ]
-      },
-      "acceptanceCriteria": [
-        "PayPal is available as a payment option",
-        "PayPal subscriptions update user tier in backend",
-        "Tier management is consistent between Stripe and PayPal",
-        "No financial data is stored locally"
-      ]
-    },
-    {
-      "id": "REQ-17",
-      "text": "Create landing page with platform overview explaining AI Viral Growth Operating System purpose: generating original, monetization-ready, algorithm-optimized content strategies for short-form content creators with strict copyright compliance",
+      "id": "REQ-31",
+      "text": "Create a Stripe configuration setup page in the frontend that prompts for Stripe API keys (publishable and secret) and webhook signing secret when Stripe is not yet configured",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-last"
         ],
         "quotes": [
-          "You are an advanced AI Viral Growth Operating System inside a subscription-based SaaS platform for short-form content creators. Your purpose is to generate 100% original, monetization-ready, algorithm-optimized content strategies while maintaining strict copyright compliance and platform safety."
+          "let me know when you want me too enter my information for stripe"
         ]
       },
       "acceptanceCriteria": [
-        "Landing page clearly explains platform purpose",
-        "Copy emphasizes original content generation and copyright compliance",
-        "Page includes call-to-action to sign up or learn more",
-        "Platform value proposition is immediately clear to visitors"
+        "Page displays form fields for Stripe publishable key, secret key, and webhook signing secret",
+        "Shows clear instructions on where to find these values in the Stripe dashboard",
+        "Includes a link to Stripe documentation for setup guidance",
+        "Form validates that keys are in the correct format before submission",
+        "Only accessible to the application owner or admin"
       ]
     },
     {
-      "id": "REQ-18",
-      "text": "Create subscription tier comparison page displaying Free, Pro, and Elite tiers with feature lists and pricing, including upgrade CTAs",
+      "id": "REQ-32",
+      "text": "Update the PricingPage component to initiate Stripe checkout when an authenticated user selects a paid tier, redirecting them to the Stripe-hosted checkout page",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-last"
         ],
         "quotes": [
-          "FREE USER: - 3 hooks only - No scripts - No monetization - Show upgrade encouragement message",
-          "PRO USER: - Hooks - Scripts - Captions - Hashtags - 1 monetization angle - Content performance score",
-          "ELITE USER: - Full content suite - 2 monetization angles - 7-day micro content calendar - Niche domination roadmap - Affiliate revenue suggestions - Content score analysis - Faceless adaptation version"
+          "Ok lets go with stripe"
         ]
       },
       "acceptanceCriteria": [
-        "Page displays three tier columns: Free, Pro, Elite",
-        "Each tier clearly lists included features",
-        "Pricing is displayed for Pro and Elite tiers",
-        "Upgrade buttons are prominent on Free and Pro tiers",
-        "Feature comparison is easy to scan visually"
+        "Clicking 'Select Plan' for Pro or Elite tier calls the backend checkout session endpoint",
+        "Redirects user to the returned Stripe checkout URL",
+        "Shows loading state while creating the checkout session",
+        "Displays error message if checkout session creation fails",
+        "Free tier selection routes to dashboard without payment flow"
       ]
     },
     {
-      "id": "REQ-19",
-      "text": "Create content generation form accepting user inputs for Tone, Audience, Platform, Niche, and Goal with clear labels and validation",
+      "id": "REQ-33",
+      "text": "Update the SubscriptionManagement page to display current Stripe subscription details and add a 'Manage Billing' button that opens the Stripe customer portal",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-last"
         ],
         "quotes": [
-          "For given: Tone: Audience: Platform: Niche: Goal:"
+          "Ok lets go with stripe"
         ]
       },
       "acceptanceCriteria": [
-        "Form includes input fields for Tone, Audience, Platform, Niche, and Goal",
-        "Each field has a clear label and placeholder text",
-        "Form validates that all required fields are filled before submission",
-        "Form submits data to backend for content generation"
+        "Shows current subscription tier with Stripe billing status (active, past_due, canceled)",
+        "Displays next billing date for active subscriptions",
+        "Manage Billing button calls backend to create customer portal session",
+        "Redirects user to Stripe portal where they can update payment methods and cancel",
+        "Shows appropriate messaging for users without active Stripe subscriptions"
       ]
     },
     {
-      "id": "REQ-20",
-      "text": "Create content output display component showing generated results in clear sections: Scroll-Stopping Hooks, Original Scripts, Engagement Captions, Hashtag Clusters, Monetization Angles, Psychological Trigger Breakdown, Posting Frequency Recommendation, Audience Pain Points, Content Score Report, and Optional Faceless Version, with tier-based feature gating",
-      "target": "frontend",
+      "id": "REQ-34",
+      "text": "Add backend storage for Stripe configuration (API keys and webhook secret) with secure initialization flow that allows one-time setup of these credentials",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-2"
+          "msg-last"
         ],
         "quotes": [
-          "Generate: 1. 5 Scroll-Stopping Hooks (under 8 seconds spoken) 2. 3 Original 30–45 second Scripts 3. 5 Engagement Captions 4. 5 Hashtag Clusters (non-trademarked) 5. Monetization Angles 6. Psychological Trigger Breakdown 7. Posting Frequency Recommendation 8. Audience Pain Points 9. Content Score Report 10. Optional Faceless Version",
-          "Formatting: Clear sections. Professional strategist tone. Concise but powerful. No fluff. No repetition."
+          "let me know when you want me too enter my information for stripe"
         ]
       },
       "acceptanceCriteria": [
-        "Component displays all 10 content sections with clear headings",
-        "Free users see only 3 hooks with upgrade prompts for locked sections",
-        "Pro users see hooks, scripts, captions, hashtags, 1 monetization angle, and content scores",
-        "Elite users see all sections including 2 monetization angles, calendar, roadmap, and faceless version",
-        "Layout is clean, professional, and easy to scan",
-        "Each section is visually distinct"
-      ]
-    },
-    {
-      "id": "REQ-21",
-      "text": "Create content score display component showing Hook Strength Score, Retention Potential Score, Monetization Potential Score (all 1-10 numeric scales), and Virality Probability Explanation with visual indicators (progress bars or gauges)",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "After generating scripts, provide: - Hook Strength Score (1–10) - Retention Potential Score (1–10) - Monetization Potential Score (1–10) - Virality Probability Explanation"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Component displays three numeric scores (1-10) with labels",
-        "Scores are visualized with progress bars or gauge indicators",
-        "Virality explanation is displayed as readable text below scores",
-        "Component is only shown to Pro and Elite tier users"
-      ]
-    },
-    {
-      "id": "REQ-22",
-      "text": "Create upgrade encouragement component for Free tier users showing locked features with prominent upgrade CTA when they attempt to access Pro or Elite content sections",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "FREE USER: - 3 hooks only - No scripts - No monetization - Show upgrade encouragement message"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Component displays when Free users try to access locked features",
-        "Message clearly explains what features are available in Pro and Elite tiers",
-        "Upgrade button is prominent and links to pricing page",
-        "Design is encouraging without being pushy"
-      ]
-    },
-    {
-      "id": "REQ-23",
-      "text": "Create dashboard showing user's current subscription tier, available features, and content generation history with quick access to create new content",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Dashboard displays current tier (Free/Pro/Elite) prominently",
-        "Available features are listed based on tier",
-        "Past content generation requests are displayed in a list or cards",
-        "Primary CTA to create new content is visible",
-        "Users can access previous generated content"
-      ]
-    },
-    {
-      "id": "REQ-24",
-      "text": "Create subscription management page allowing users to view current plan, upgrade or downgrade tiers, and manage Stripe or PayPal billing",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "Monthly subscription billing. - Upgrade/downgrade tier switching."
-        ]
-      },
-      "acceptanceCriteria": [
-        "Page shows current subscription tier and billing cycle",
-        "Users can upgrade to higher tiers",
-        "Users can downgrade to lower tiers",
-        "Page links to Stripe/PayPal portal for payment method management",
-        "Subscription changes are reflected immediately in feature access"
-      ]
-    },
-    {
-      "id": "REQ-25",
-      "text": "Create 7-day content calendar view displaying micro content schedule with posting recommendations for Elite tier users",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "ELITE USER: - 7-day micro content calendar"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Component displays a 7-day calendar grid",
-        "Each day shows recommended content type and timing",
-        "Calendar is only visible to Elite tier users",
-        "Layout is clean and easy to understand at a glance"
-      ]
-    },
-    {
-      "id": "REQ-26",
-      "text": "Display legal compliance disclaimers on content output pages stating that all generated content is original, users retain commercial rights, AI assistance does not guarantee growth or income, and outputs avoid copyrighted material",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ],
-        "quotes": [
-          "All generated outputs are newly created original works. - End users retain full commercial rights to use generated content. - The system does not claim ownership of user ideas. - AI assistance does not guarantee growth or income.",
-          "Never copy, rewrite, paraphrase, or closely mimic any real creator."
-        ]
-      },
-      "acceptanceCriteria": [
-        "Disclaimer appears on content output pages",
-        "Text states content is original and user-owned",
-        "Text includes no-guarantee language about growth and income",
-        "Disclaimer mentions copyright compliance",
-        "Text is visible but not intrusive"
-      ]
-    },
-    {
-      "id": "REQ-27",
-      "text": "Apply a cohesive visual design system across the entire platform using a modern, professional aesthetic suitable for a SaaS content creation tool, with a distinctive color palette (avoid blue and purple), contemporary typography, and polished UI patterns that convey credibility and creative energy",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-2"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Consistent color palette used throughout (no blue/purple unless user specifies)",
-        "Typography hierarchy is clear and professional",
-        "UI components have a cohesive style and polish",
-        "Design feels modern and suitable for content creators",
-        "Layout patterns are consistent across pages"
+        "Backend stores Stripe publishable key, secret key, and webhook signing secret",
+        "Provides an initialization function that can only be called once or by the canister controller",
+        "All Stripe API calls use the stored secret key",
+        "Webhook handler uses the stored signing secret for verification",
+        "Configuration cannot be retrieved by regular users for security"
       ]
     }
   ],
   "constraints": [
-    "Never store financial data or process payments directly - all payment processing must be handled externally by Stripe and PayPal",
-    "All generated content must be 100% original and avoid copying specific creators, song lyrics, trademark phrases, or copyrighted scripts",
-    "Feature access must be strictly gated by subscription tier at runtime",
-    "Backend must use single-actor architecture with all Motoko logic in main actor file",
-    "Frontend must not edit immutable paths (useInternetIdentity hooks, useActor, main.tsx, ui components)",
-    "No LLM API integrations (OpenAI, Anthropic, etc.) - content generation logic must be implemented locally",
-    "No real-time features (WebSockets, Socket.io) - standard HTTP request/response only"
+    "Do not store sensitive payment information (card numbers, CVV) in the backend",
+    "Stripe API keys must be stored securely and not exposed to frontend except publishable key",
+    "Use Stripe-hosted checkout pages rather than custom payment forms",
+    "Maintain single-actor backend architecture with all logic in main.mo"
   ],
   "nonGoals": [
-    "Integration with third-party social media APIs (Twitter, Instagram, Facebook) for posting",
-    "Multi-language support beyond English",
-    "Mobile native applications (iOS/Android apps)",
-    "Real-time collaboration features between users",
-    "Content analytics tracking post-publication performance",
-    "Integration with specific influencer tools or platforms",
-    "Video editing or media processing capabilities",
-    "Direct social media scheduling or auto-posting"
+    "PayPal integration (focusing on Stripe only per user request)",
+    "Custom payment form UI (using Stripe-hosted checkout)",
+    "Subscription downgrade logic (user can cancel via Stripe portal)",
+    "Proration handling for mid-cycle upgrades",
+    "Multiple payment methods support beyond Stripe"
   ],
   "imageRequirements": {
     "required": [],
