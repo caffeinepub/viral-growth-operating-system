@@ -1,0 +1,54 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Fix Canister ID Not Resolved (Error 400) on ICP0.io gateway",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Ensure the frontend index.html and build configuration correctly embed or reference the canister ID so that the ICP0.io gateway can resolve the destination canister",
+      "acceptanceCriteria": [
+        "Navigating to https://xzgjg-tiaaa-aaaal-qndgq-cai.icp0.io loads the app without a 400 error",
+        "The ICP0.io gateway successfully resolves the canister destination from the request",
+        "The frontend build artifacts include proper canister ID references in index.html or asset manifest"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/index.html",
+          "operation": "modify",
+          "description": "Add the canister ID as a meta tag in the HTML head section to ensure the ICP0.io gateway can resolve the destination canister. Insert a meta tag with name='ic-canister-id' and content='xzgjg-tiaaa-aaaal-qndgq-cai' immediately after the existing meta tags. This allows the gateway to identify the target canister from the HTML document itself."
+        },
+        {
+          "path": "frontend/vite.config.ts",
+          "operation": "modify",
+          "description": "Update the Vite configuration to ensure the canister ID is properly injected during the build process. Add environment variable definitions and ensure the build output includes proper canister ID references in generated assets. Configure the build to set __CANISTER_ID__ or IC_CANISTER_ID environment variables accessible to the frontend code."
+        },
+        {
+          "path": "frontend/src/hooks/useActor.ts",
+          "operation": "modify",
+          "description": "Verify that the actor initialization uses the correct canister ID from environment variables or hardcoded for mainnet deployment. Ensure that createActor is called with the explicit canister ID 'xzgjg-tiaaa-aaaal-qndgq-cai' for mainnet, and that the host configuration points to the IC mainnet (https://ic0.app or https://icp0.io)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Verify and correct the dfx.json deployment configuration to ensure the frontend canister is properly declared with its canister ID for mainnet",
+      "acceptanceCriteria": [
+        "dfx.json declares the frontend asset canister with the correct canister ID binding for mainnet",
+        "Re-deploying the frontend canister does not produce a canister ID resolution error",
+        "The app is accessible via its ICP0.io URL after deployment"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/.ic-assets.json",
+          "operation": "create",
+          "description": "Create an IC assets configuration file that explicitly declares the canister ID and asset mappings for the frontend. This file should include the canister ID 'xzgjg-tiaaa-aaaal-qndgq-cai' and ensure all frontend assets are properly mapped for the IC asset canister deployment. Include appropriate cache headers and content type mappings for HTML, JS, CSS, and other static assets."
+        },
+        {
+          "path": "frontend/package.json",
+          "operation": "modify",
+          "description": "Update the build scripts to ensure the canister ID is set as an environment variable during the build process. Add or modify scripts to set VITE_CANISTER_ID or similar environment variables to 'xzgjg-tiaaa-aaaal-qndgq-cai' before running the Vite build command. This ensures all build artifacts reference the correct canister ID."
+        }
+      ]
+    }
+  ]
+}

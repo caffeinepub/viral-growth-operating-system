@@ -1,0 +1,50 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-24T16:45:15.986Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 2,
+    "implemented": 1,
+    "items": [
+      {
+        "id": "REQ-1",
+        "summary": "Ensure the frontend index.html and build configuration correctly embed or reference the canister ID so that the ICP0.io gateway can resolve the destination canister. The HTML entry point must include the correct canister ID in its asset or routing configuration (e.g., via the dfx.json output or a properly set __CANISTER_ID__ variable), so requests to https://xzgjg-tiaaa-aaaal-qndgq-cai.icp0.io resolve without a 400 error.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/index.html",
+          "frontend/vite.config.ts",
+          "frontend/src/hooks/useActor.ts"
+        ],
+        "matchedFiles": [
+          "frontend/index.html"
+        ]
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Verify and correct the dfx.json or equivalent deployment configuration to ensure the frontend canister (xzgjg-tiaaa-aaaal-qndgq-cai) is properly declared with its canister ID and that the asset canister type and source directories are correctly set for deployment on the IC mainnet.",
+        "status": "missing",
+        "plannedFiles": [
+          "frontend/.ic-assets.json",
+          "frontend/package.json"
+        ],
+        "matchedFiles": []
+      }
+    ]
+  },
+  "changedFiles": [
+    "backend/main.mo",
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/index.html",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

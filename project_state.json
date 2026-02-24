@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "New project",
+  "architectural_notes": [],
+  "known_issues": [
+    "Canister ID Not Resolved (Error 400) when accessing the app URL on ICP0.io gateway"
+  ],
+  "isFixRequest": true,
+  "existing_features": [
+    {
+      "id": "feature-ensure-the-frontend-index-html-and-build-configuration-correctly-embed-or-reference-the-canister-id-so-that-the-icp0-io-gateway-can-resolve-the-destination-canister-the-html-entry-point-must-include-the-correct-canister-id-in-its-asset-or-routing-configuration-e-g-via-the-dfx-json-output-or-a-properly-set-canister-id-variable-so-requests-to-https-xzgjg-tiaaa-aaaal-qndgq-cai-icp0-io-resolve-without-a-400-error",
+      "title": "Ensure the frontend index.html and build configuration correctly embed or reference the canister ID so that the ICP0.io gateway can resolve the destination canister. The HTML entry point must include the correct canister ID in its asset or routing configuration (e.g., via the dfx.json output or a properly set __CANISTER_ID__ variable), so requests to https://xzgjg-tiaaa-aaaal-qndgq-cai.icp0.io resolve without a 400 error.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-2",
+      "summary": "Verify and correct the dfx.json or equivalent deployment configuration to ensure the frontend canister (xzgjg-tiaaa-aaaal-qndgq-cai) is properly declared with its canister ID and that the asset canister type and source directories are correctly set for deployment on the IC mainnet.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    }
+  ],
+  "projectName": "Viral Growth OS",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

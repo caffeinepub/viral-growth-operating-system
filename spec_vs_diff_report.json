@@ -1,0 +1,32 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-24T16:45:15.983Z",
+  "summary": "The diff adds a <meta name=\"ic-canister-id\" content=\"xzgjg-tiaaa-aaaal-qndgq-cai\" /> tag to frontend/index.html, which partially addresses REQ-1 by embedding the canister ID in the HTML entry point. However, REQ-2 requires changes to dfx.json or equivalent deployment configuration to declare the frontend asset canister with the correct canister ID binding for mainnet — no such file was modified in the diff. The project_state.json also shows both AR-1 and AR-2 as still pending, confirming neither requirement is fully implemented.",
+  "missing_requirements": [
+    {
+      "id": "REQ-2",
+      "requirement": "Verify and correct the dfx.json or equivalent deployment configuration to ensure the frontend canister (xzgjg-tiaaa-aaaal-qndgq-cai) is properly declared with its canister ID and that the asset canister type and source directories are correctly set for deployment on the IC mainnet.",
+      "reason": "No dfx.json or canister IDs configuration file was added or modified in the diff. The deployment configuration for the frontend canister on IC mainnet is not addressed.",
+      "evidence": [
+        "project_state.json"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "Modification to backend/main.mo",
+      "reason": "The build request explicitly states not to change the backend business logic or data schema, yet backend/main.mo appears as a modified file in the diff. No backend changes were requested.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    }
+  ],
+  "confidence": 0.82,
+  "changed_files": [
+    "backend/main.mo",
+    "frontend-file-summaries.txt",
+    "frontend/index.html",
+    "project_state.json"
+  ]
+}

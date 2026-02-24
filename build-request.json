@@ -1,0 +1,57 @@
+{
+  "kind": "build_request",
+  "title": "Fix Canister ID Not Resolved (Error 400) on ICP0.io gateway",
+  "projectName": "Viral Growth OS",
+  "priority": "high",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Ensure the frontend index.html and build configuration correctly embed or reference the canister ID so that the ICP0.io gateway can resolve the destination canister. The HTML entry point must include the correct canister ID in its asset or routing configuration (e.g., via the dfx.json output or a properly set __CANISTER_ID__ variable), so requests to https://xzgjg-tiaaa-aaaal-qndgq-cai.icp0.io resolve without a 400 error.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Error 400 Canister ID Not Resolved The gateway couldn't determine the destination canister for this request."
+        ]
+      },
+      "acceptanceCriteria": [
+        "Navigating to https://xzgjg-tiaaa-aaaal-qndgq-cai.icp0.io loads the app without a 400 error",
+        "The ICP0.io gateway successfully resolves the canister destination from the request",
+        "The frontend build artifacts include proper canister ID references in index.html or asset manifest"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Verify and correct the dfx.json or equivalent deployment configuration to ensure the frontend canister (xzgjg-tiaaa-aaaal-qndgq-cai) is properly declared with its canister ID and that the asset canister type and source directories are correctly set for deployment on the IC mainnet.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Ensure the request includes a valid canister ID or uses a recognized domain."
+        ]
+      },
+      "acceptanceCriteria": [
+        "dfx.json declares the frontend asset canister with the correct canister ID binding for mainnet",
+        "Re-deploying the frontend canister does not produce a canister ID resolution error",
+        "The app is accessible via its ICP0.io URL after deployment"
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not change the backend business logic or data schema",
+    "Do not modify files listed in frontend.immutablePaths"
+  ],
+  "nonGoals": [
+    "Adding new application features",
+    "Changing the visual design or UI layout",
+    "Modifying Stripe integration logic"
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}
