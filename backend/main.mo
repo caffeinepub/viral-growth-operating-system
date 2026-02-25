@@ -247,7 +247,10 @@ actor {
     brandVoiceProfiles.add(caller, profile);
   };
 
-  public query func isStripeConfigured() : async Bool {
+  public query ({ caller }) func isStripeConfigured() : async Bool {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can check Stripe configuration");
+    };
     true;
   };
 

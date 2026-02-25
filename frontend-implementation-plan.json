@@ -1,52 +1,51 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix Canister ID Not Resolved (Error 400) on ICP0.io gateway",
+  "title": "Fix 404 canister ID not found error on production",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Ensure the frontend index.html and build configuration correctly embed or reference the canister ID so that the ICP0.io gateway can resolve the destination canister",
+      "summary": "Ensure the correct canister ID is embedded in frontend/index.html meta tag so the ICP0.io gateway can resolve the frontend canister",
       "acceptanceCriteria": [
-        "Navigating to https://xzgjg-tiaaa-aaaal-qndgq-cai.icp0.io loads the app without a 400 error",
-        "The ICP0.io gateway successfully resolves the canister destination from the request",
-        "The frontend build artifacts include proper canister ID references in index.html or asset manifest"
+        "The <meta name='dfinity-canister-id'> tag in frontend/index.html contains the correct deployed frontend canister ID",
+        "Loading the production URL no longer returns a 404 canister not found error",
+        "The app loads successfully on the ICP0.io gateway"
       ],
       "file_operations": [
         {
           "path": "frontend/index.html",
           "operation": "modify",
-          "description": "Add the canister ID as a meta tag in the HTML head section to ensure the ICP0.io gateway can resolve the destination canister. Insert a meta tag with name='ic-canister-id' and content='xzgjg-tiaaa-aaaal-qndgq-cai' immediately after the existing meta tags. This allows the gateway to identify the target canister from the HTML document itself."
-        },
-        {
-          "path": "frontend/vite.config.ts",
-          "operation": "modify",
-          "description": "Update the Vite configuration to ensure the canister ID is properly injected during the build process. Add environment variable definitions and ensure the build output includes proper canister ID references in generated assets. Configure the build to set __CANISTER_ID__ or IC_CANISTER_ID environment variables accessible to the frontend code."
-        },
-        {
-          "path": "frontend/src/hooks/useActor.ts",
-          "operation": "modify",
-          "description": "Verify that the actor initialization uses the correct canister ID from environment variables or hardcoded for mainnet deployment. Ensure that createActor is called with the explicit canister ID 'xzgjg-tiaaa-aaaal-qndgq-cai' for mainnet, and that the host configuration points to the IC mainnet (https://ic0.app or https://icp0.io)."
+          "description": "Update the <meta name='dfinity-canister-id'> tag to use the correct deployed frontend canister ID. The current value 'xzgjg-tiaaa-aaaal-qndgq-cai' must be replaced with the actual frontend canister ID from the deployment. Verify this canister ID matches the output of 'dfx canister id frontend --network ic' before deployment."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Verify and correct the dfx.json deployment configuration to ensure the frontend canister is properly declared with its canister ID for mainnet",
+      "summary": "Ensure the backend canister ID referenced in the frontend actor configuration matches the deployed backend canister ID",
       "acceptanceCriteria": [
-        "dfx.json declares the frontend asset canister with the correct canister ID binding for mainnet",
-        "Re-deploying the frontend canister does not produce a canister ID resolution error",
-        "The app is accessible via its ICP0.io URL after deployment"
+        "The backend canister ID used in actor initialization matches the deployed backend canister",
+        "No 404 errors are thrown when the frontend attempts to communicate with the backend canister"
       ],
       "file_operations": [
         {
-          "path": "frontend/.ic-assets.json",
-          "operation": "create",
-          "description": "Create an IC assets configuration file that explicitly declares the canister ID and asset mappings for the frontend. This file should include the canister ID 'xzgjg-tiaaa-aaaal-qndgq-cai' and ensure all frontend assets are properly mapped for the IC asset canister deployment. Include appropriate cache headers and content type mappings for HTML, JS, CSS, and other static assets."
-        },
-        {
-          "path": "frontend/package.json",
+          "path": "frontend/src/hooks/useActor.ts",
           "operation": "modify",
-          "description": "Update the build scripts to ensure the canister ID is set as an environment variable during the build process. Add or modify scripts to set VITE_CANISTER_ID or similar environment variables to 'xzgjg-tiaaa-aaaal-qndgq-cai' before running the Vite build command. This ensures all build artifacts reference the correct canister ID."
+          "description": "Verify that the backend canister ID used in actor initialization matches the deployed backend canister ID from 'dfx canister id backend --network ic'. If the canister ID is hardcoded or derived from environment variables, ensure it references the correct production backend canister. If using generated declarations, regenerate them with 'dfx generate backend --network ic' to ensure canister IDs are up to date."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Audit the dfx.json and canister configuration to confirm that frontend and backend canister IDs are consistently defined and that the deployment targets the correct network (ic mainnet)",
+      "acceptanceCriteria": [
+        "dfx.json references the correct canister IDs for both frontend and backend on the ic network",
+        "Deployment produces no canister-not-found errors"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/index.html",
+          "operation": "modify",
+          "description": "Cross-check the canister ID in the <meta name='dfinity-canister-id'> tag against the canister_ids.json file (or .dfx/ic/canister_ids.json) to ensure consistency. If canister_ids.json is missing or outdated, regenerate it by deploying to the ic network with 'dfx deploy --network ic'. This operation ensures the frontend HTML references the same canister ID that dfx.json defines for the ic network."
         }
       ]
     }

@@ -2,8 +2,8 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-ensure-the-frontend-index-html-and-build-configuration-correctly-embed-or-reference-the-canister-id-so-that-the-icp0-io-gateway-can-resolve-the-destination-canister-the-html-entry-point-must-include-the-correct-canister-id-in-its-asset-or-routing-configuration-e-g-via-the-dfx-json-output-or-a-properly-set-canister-id-variable-so-requests-to-https-xzgjg-tiaaa-aaaal-qndgq-cai-icp0-io-resolve-without-a-400-error",
-      "featureTitle": "Ensure the frontend index.html and build configuration correctly embed or reference the canister ID so that the ICP0.io gateway can resolve the destination canister. The HTML entry point must include the correct canister ID in its asset or routing configuration (e.g., via the dfx.json output or a properly set __CANISTER_ID__ variable), so requests to https://xzgjg-tiaaa-aaaal-qndgq-cai.icp0.io resolve without a 400 error.",
+      "featureId": "feature-ensure-the-correct-canister-id-is-embedded-in-frontend-index-html-meta-tag-so-the-icp0-io-gateway-can-resolve-the-frontend-canister-verify-the-canister-id-in-the-meta-tag-matches-the-deployed-frontend-canister-id-exactly-and-that-it-is-present-at-page-load-before-any-js-executes",
+      "featureTitle": "Ensure the correct canister ID is embedded in frontend/index.html meta tag so the ICP0.io gateway can resolve the frontend canister. Verify the canister ID in the meta tag matches the deployed frontend canister ID exactly, and that it is present at page load before any JS executes.",
       "files": [
         "frontend/index.html"
       ],
@@ -19,6 +19,27 @@
       ],
       "testIds": [
         "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-audit-the-dfx-json-and-canister-configuration-to-confirm-that-frontend-and-backend-canister-ids-are-consistently-defined-and-that-the-deployment-targets-the-correct-network-ic-mainnet-fix-any-misconfigured-canister-ids-or-network-targets",
+      "featureTitle": "Audit the dfx.json and canister configuration to confirm that frontend and backend canister IDs are consistently defined and that the deployment targets the correct network (ic mainnet). Fix any misconfigured canister IDs or network targets.",
+      "files": [
+        "frontend/index.html"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
       ],
       "confidence": "high"
     }

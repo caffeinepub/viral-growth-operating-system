@@ -4,15 +4,23 @@
   "summary": "New project",
   "architectural_notes": [],
   "known_issues": [
-    "Canister ID Not Resolved (Error 400) when accessing the app URL on ICP0.io gateway"
+    "404 canister id not found error on production deployment (Version 8)"
   ],
   "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-ensure-the-frontend-index-html-and-build-configuration-correctly-embed-or-reference-the-canister-id-so-that-the-icp0-io-gateway-can-resolve-the-destination-canister-the-html-entry-point-must-include-the-correct-canister-id-in-its-asset-or-routing-configuration-e-g-via-the-dfx-json-output-or-a-properly-set-canister-id-variable-so-requests-to-https-xzgjg-tiaaa-aaaal-qndgq-cai-icp0-io-resolve-without-a-400-error",
-      "title": "Ensure the frontend index.html and build configuration correctly embed or reference the canister ID so that the ICP0.io gateway can resolve the destination canister. The HTML entry point must include the correct canister ID in its asset or routing configuration (e.g., via the dfx.json output or a properly set __CANISTER_ID__ variable), so requests to https://xzgjg-tiaaa-aaaal-qndgq-cai.icp0.io resolve without a 400 error.",
+      "id": "feature-ensure-the-correct-canister-id-is-embedded-in-frontend-index-html-meta-tag-so-the-icp0-io-gateway-can-resolve-the-frontend-canister-verify-the-canister-id-in-the-meta-tag-matches-the-deployed-frontend-canister-id-exactly-and-that-it-is-present-at-page-load-before-any-js-executes",
+      "title": "Ensure the correct canister ID is embedded in frontend/index.html meta tag so the ICP0.io gateway can resolve the frontend canister. Verify the canister ID in the meta tag matches the deployed frontend canister ID exactly, and that it is present at page load before any JS executes.",
       "reqIds": [
         "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-audit-the-dfx-json-and-canister-configuration-to-confirm-that-frontend-and-backend-canister-ids-are-consistently-defined-and-that-the-deployment-targets-the-correct-network-ic-mainnet-fix-any-misconfigured-canister-ids-or-network-targets",
+      "title": "Audit the dfx.json and canister configuration to confirm that frontend and backend canister IDs are consistently defined and that the deployment targets the correct network (ic mainnet). Fix any misconfigured canister IDs or network targets.",
+      "reqIds": [
+        "REQ-3"
       ],
       "version": 1
     }
@@ -20,14 +28,14 @@
   "new_feature_requests": [
     {
       "id": "AR-2",
-      "summary": "Verify and correct the dfx.json or equivalent deployment configuration to ensure the frontend canister (xzgjg-tiaaa-aaaal-qndgq-cai) is properly declared with its canister ID and that the asset canister type and source directories are correctly set for deployment on the IC mainnet.",
+      "summary": "Ensure the backend canister ID referenced in the frontend actor configuration (useActor.ts and any generated declarations) matches the deployed backend canister ID. Regenerate or update canister ID bindings if there is a mismatch.",
       "reqIds": [
         "REQ-2"
       ],
       "status": "pending"
     }
   ],
-  "projectName": "Viral Growth OS",
+  "projectName": "Fix 404 canister ID not found error on production",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }
