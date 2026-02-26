@@ -2,10 +2,14 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-ensure-the-correct-canister-id-is-embedded-in-frontend-index-html-meta-tag-so-the-icp0-io-gateway-can-resolve-the-frontend-canister-verify-the-canister-id-in-the-meta-tag-matches-the-deployed-frontend-canister-id-exactly-and-that-it-is-present-at-page-load-before-any-js-executes",
-      "featureTitle": "Ensure the correct canister ID is embedded in frontend/index.html meta tag so the ICP0.io gateway can resolve the frontend canister. Verify the canister ID in the meta tag matches the deployed frontend canister ID exactly, and that it is present at page load before any JS executes.",
+      "featureId": "feature-add-smooth-hover-effects-fade-in-animations-on-scroll-and-slide-transitions-throughout-the-app-apply-to-cards-sections-and-list-items-so-elements-animate-into-view-as-users-scroll-down-the-page",
+      "featureTitle": "Add smooth hover effects, fade-in animations on scroll, and slide transitions throughout the app — apply to cards, sections, and list items so elements animate into view as users scroll down the page.",
       "files": [
-        "frontend/index.html"
+        "frontend/src/components/Layout.tsx",
+        "frontend/src/hooks/useScrollAnimation.ts",
+        "frontend/src/index.css",
+        "frontend/src/pages/LandingPage.tsx",
+        "frontend/src/pages/PricingPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -15,7 +19,8 @@
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
         "github-export-icp-cli@1.0.0",
-        "http-outcalls@3.0.0"
+        "http-outcalls@3.0.0",
+        "blob-storage@4.0.0"
       ],
       "testIds": [
         "REQ-1"
@@ -23,10 +28,15 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-audit-the-dfx-json-and-canister-configuration-to-confirm-that-frontend-and-backend-canister-ids-are-consistently-defined-and-that-the-deployment-targets-the-correct-network-ic-mainnet-fix-any-misconfigured-canister-ids-or-network-targets",
-      "featureTitle": "Audit the dfx.json and canister configuration to confirm that frontend and backend canister IDs are consistently defined and that the deployment targets the correct network (ic mainnet). Fix any misconfigured canister IDs or network targets.",
+      "featureId": "feature-add-pulse-and-ripple-click-animations-to-all-primary-call-to-action-buttons-and-navigation-action-buttons-across-the-app-e-g-get-started-generate-content-upgrade-pricing-tier-buttons",
+      "featureTitle": "Add pulse and ripple click animations to all primary call-to-action buttons and navigation action buttons across the app (e.g., 'Get Started', 'Generate Content', 'Upgrade', pricing tier buttons).",
       "files": [
-        "frontend/index.html"
+        "frontend/src/components/Layout.tsx",
+        "frontend/src/hooks/useRippleEffect.ts",
+        "frontend/src/index.css",
+        "frontend/src/pages/ContentGenerator.tsx",
+        "frontend/src/pages/LandingPage.tsx",
+        "frontend/src/pages/PricingPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -36,10 +46,130 @@
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
         "github-export-icp-cli@1.0.0",
-        "http-outcalls@3.0.0"
+        "http-outcalls@3.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-bold-hero-section-at-the-top-of-the-landingpage-with-a-visually-striking-banner-a-compelling-headline-a-short-subheadline-describing-the-product-value-and-a-prominent-call-to-action-button-linking-to-the-pricing-or-sign-up-flow",
+      "featureTitle": "Add a bold hero section at the top of the LandingPage with a visually striking banner, a compelling headline, a short subheadline describing the product value, and a prominent call-to-action button linking to the pricing or sign-up flow.",
+      "files": [
+        "frontend/src/components/HeroSection.tsx",
+        "frontend/src/pages/LandingPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0",
+        "blob-storage@4.0.0"
       ],
       "testIds": [
         "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-testimonials-reviews-section-to-the-landingpage-featuring-at-least-3-fictional-customer-quotes-with-names-roles-and-avatar-initials-to-build-trust-with-visitors",
+      "featureTitle": "Add a testimonials/reviews section to the LandingPage featuring at least 3 fictional customer quotes with names, roles, and avatar initials to build trust with visitors.",
+      "files": [
+        "frontend/src/components/TestimonialsSection.tsx",
+        "frontend/src/pages/LandingPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-countdown-timer-component-to-the-landingpage-that-counts-down-to-a-promotional-deadline-e-g-a-limited-time-discount-offer-creating-urgency-for-visitors-to-sign-up",
+      "featureTitle": "Add a countdown timer component to the LandingPage that counts down to a promotional deadline (e.g., a limited-time discount offer), creating urgency for visitors to sign up.",
+      "files": [
+        "frontend/src/components/CountdownTimer.tsx",
+        "frontend/src/hooks/useCountdown.ts",
+        "frontend/src/pages/LandingPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-an-image-carousel-gallery-section-to-the-landingpage-that-visually-showcases-the-product-s-features-or-use-cases-with-auto-advancing-slides-manual-navigation-arrows-and-dot-indicators",
+      "featureTitle": "Add an image carousel/gallery section to the LandingPage that visually showcases the product's features or use cases with auto-advancing slides, manual navigation arrows, and dot indicators.",
+      "files": [
+        "frontend/src/components/FeatureCarousel.tsx",
+        "frontend/src/hooks/useCarousel.ts",
+        "frontend/src/pages/LandingPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-smooth-scroll-navigation-on-the-landingpage-with-anchor-links-in-the-header-navigation-that-scroll-smoothly-to-corresponding-sections-e-g-features-how-it-works-pricing-testimonials-on-the-same-page",
+      "featureTitle": "Implement smooth scroll navigation on the LandingPage with anchor links in the header/navigation that scroll smoothly to corresponding sections (e.g., Features, How It Works, Pricing, Testimonials) on the same page.",
+      "files": [
+        "frontend/src/components/LandingPageNav.tsx",
+        "frontend/src/components/Layout.tsx",
+        "frontend/src/hooks/useScrollSpy.ts",
+        "frontend/src/pages/LandingPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "stripe@3.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-7"
       ],
       "confidence": "high"
     }

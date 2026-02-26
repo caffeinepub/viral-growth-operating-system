@@ -6,8 +6,21 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, Settings, Loader2, Shield, Eye, EyeOff } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { CheckCircle, Settings, Loader2, Shield, Eye, EyeOff, Info } from 'lucide-react';
 import { toast } from 'sonner';
+
+function getProductionWebhookUrl(): string {
+  const hostname = window.location.hostname;
+  // On IC mainnet the frontend is served from *.ic0.app or *.icp0.io
+  // The backend webhook endpoint is on the same canister
+  return `${window.location.protocol}//${hostname}/api/webhook`;
+}
+
+function isProductionDomain(): boolean {
+  const hostname = window.location.hostname;
+  return hostname.endsWith('.ic0.app') || hostname.endsWith('.icp0.io') || hostname.endsWith('.icp0.app');
+}
 
 export default function StripeSetup() {
   const { identity } = useInternetIdentity();
@@ -75,6 +88,9 @@ export default function StripeSetup() {
     }
   };
 
+  const isLiveKey = secretKey.startsWith('sk_live_');
+  const isProduction = isProductionDomain();
+
   if (isConfigured && !isEditing) {
     return (
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10">
@@ -82,6 +98,32 @@ export default function StripeSetup() {
           <h1 className="text-3xl font-bold mb-2">Stripe Configuration</h1>
           <p className="text-muted-foreground">Manage your Stripe payment integration.</p>
         </div>
+
+        {isProduction && (
+          <Alert className="mb-6 border-primary/30 bg-primary/5">
+            <Info className="h-4 w-4 text-primary" />
+            <AlertTitle className="text-primary">Production Deployment Detected</AlertTitle>
+            <AlertDescription className="text-sm space-y-2 mt-1">
+              <p>
+                You are running on a production IC domain. Ensure your Stripe webhook endpoint is
+                configured in the{' '}
+                <a
+                  href="https://dashboard.stripe.com/webhooks"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline underline-offset-2"
+                >
+                  Stripe Dashboard
+                </a>{' '}
+                to point to your production canister.
+              </p>
+              <p className="font-mono text-xs bg-muted rounded px-2 py-1 break-all">
+                Webhook URL: {getProductionWebhookUrl()}
+              </p>
+            </AlertDescription>
+          </Alert>
+        )}
+
         <Card className="border-primary/20">
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -128,6 +170,34 @@ export default function StripeSetup() {
         </p>
       </div>
 
+      {isProduction && (
+        <Alert className="mb-6 border-amber-500/30 bg-amber-500/5">
+          <Info className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+          <AlertTitle className="text-amber-700 dark:text-amber-300">Production Checklist</AlertTitle>
+          <AlertDescription className="text-sm space-y-1 mt-1 text-amber-700/80 dark:text-amber-300/80">
+            <p>You are configuring Stripe on a production IC deployment. Please ensure:</p>
+            <ul className="list-disc list-inside space-y-1 mt-1">
+              <li>Use a <strong>live key</strong> (sk_live_...) for real payments</li>
+              <li>
+                Update your webhook endpoint in the{' '}
+                <a
+                  href="https://dashboard.stripe.com/webhooks"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-2"
+                >
+                  Stripe Dashboard
+                </a>{' '}
+                to:{' '}
+                <span className="font-mono text-xs bg-amber-100 dark:bg-amber-900/30 rounded px-1 py-0.5 break-all">
+                  {getProductionWebhookUrl()}
+                </span>
+              </li>
+            </ul>
+          </AlertDescription>
+        </Alert>
+      )}
+
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -168,8 +238,16 @@ export default function StripeSetup() {
               </button>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Use a test key (sk_test_...) for testing or a live key (sk_live_...) for production.
+              {isProduction
+                ? 'Use a live key (sk_live_...) for production payments.'
+                : 'Use a test key (sk_test_...) for testing or a live key (sk_live_...) for production.'}
             </p>
+            {isLiveKey && !isProduction && (
+              <p className="text-xs text-amber-600 dark:text-amber-400 mt-1 flex items-center gap-1">
+                <Info className="w-3 h-3" />
+                You are using a live key on a non-production domain. Ensure this is intentional.
+              </p>
+            )}
           </div>
 
           <div>

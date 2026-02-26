@@ -1,11 +1,17 @@
 # Specification
 
 ## Summary
-**Goal:** Fix the 404 canister ID not found error occurring on production by correcting canister ID references across the frontend and deployment configuration.
+**Goal:** Enhance the Viral Growth OS landing page with animations, interactive elements, and new sections to improve visual appeal and conversions.
 
 **Planned changes:**
-- Verify and update the `<meta name='dfinity-canister-id'>` tag in `frontend/index.html` to contain the correct deployed frontend canister ID
-- Ensure the backend canister ID used in frontend actor configuration matches the deployed backend canister
-- Audit and fix `dfx.json` to ensure both frontend and backend canister IDs are correctly defined and targeting the IC mainnet network
+- Add scroll-triggered fade-in and slide-up animations to cards, sections, and list items throughout the app
+- Add hover effects to interactive cards and navigation links
+- Add pulse/ripple click animations to all primary CTA buttons (e.g., "Get Started", "Generate Content", "Upgrade")
+- Add a bold hero section at the top of the LandingPage with headline, subheadline, and a CTA button linking to pricing/sign-up
+- Add a testimonials section to the LandingPage with at least 3 fictional customer quote cards (name, role, quote)
+- Add a countdown timer to the LandingPage counting down to a promotional deadline, showing days/hours/minutes/seconds with a fallback message at zero
+- Add an image carousel to the LandingPage with at least 3 slides, auto-advance every 4–5 seconds, prev/next arrows, and dot indicators
+- Implement smooth scroll navigation on the LandingPage with anchor links in the header scrolling to Features, How It Works, Pricing, and Testimonials sections, with active section highlighting
+- All animations respect the `prefers-reduced-motion` accessibility setting
 
-**User-visible outcome:** The application loads successfully on the ICP0.io gateway without any 404 canister not found errors, and the frontend can communicate with the backend canister without errors.
+**User-visible outcome:** Visitors to the landing page experience a polished, animated page with a hero banner, countdown timer, feature carousel, testimonials, and smooth anchor navigation, while all interactive buttons provide visual feedback on click.

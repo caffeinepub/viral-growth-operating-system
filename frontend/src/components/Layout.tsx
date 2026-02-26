@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { Link, useNavigate } from '@tanstack/react-router';
+import { Link, useNavigate, useRouterState } from '@tanstack/react-router';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { useQueryClient } from '@tanstack/react-query';
 import { useIsCallerAdmin } from '../hooks/useQueries';
+import { useRippleEffect } from '../hooks/useRippleEffect';
 import { Button } from '@/components/ui/button';
-import { Menu, X, Zap, Settings } from 'lucide-react';
+import { Menu, X, Zap, Settings, Heart } from 'lucide-react';
+import LandingPageNav from './LandingPageNav';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -15,10 +17,13 @@ export default function Layout({ children }: LayoutProps) {
   const { login, clear, loginStatus, identity } = useInternetIdentity();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const routerState = useRouterState();
   const { data: isAdmin } = useIsCallerAdmin();
+  const { ref: loginBtnRef, createRipple } = useRippleEffect<HTMLButtonElement>();
 
   const isAuthenticated = !!identity;
   const isLoggingIn = loginStatus === 'logging-in';
+  const isLandingPage = routerState.location.pathname === '/';
 
   const handleAuth = async () => {
     if (isAuthenticated) {
@@ -51,46 +56,58 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      {/* Vibrant gradient header */}
+      <header className="sticky top-0 z-50 border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-2 font-bold text-xl text-primary">
-              <Zap className="w-6 h-6 fill-primary" />
-              <span>ViralGrowth OS</span>
+            <Link to="/" className="flex items-center gap-2 font-extrabold text-xl group shrink-0">
+              <div className="w-8 h-8 rounded-lg gradient-hero flex items-center justify-center shadow-glow group-hover:shadow-glow-lg transition-shadow">
+                <Zap className="w-4 h-4 text-white fill-white" />
+              </div>
+              <span className="gradient-text-orange">ViralGrowth OS</span>
             </Link>
 
-            {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center gap-6">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-                  activeProps={{ className: 'text-foreground font-semibold' }}
-                >
-                  {link.label}
-                </Link>
-              ))}
-              {isAdmin && (
-                <Link
-                  to="/stripe-setup"
-                  className="flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-                  activeProps={{ className: 'text-foreground font-semibold' }}
-                >
-                  <Settings className="w-3.5 h-3.5" />
-                  Stripe Setup
-                </Link>
+            {/* Desktop Nav — show landing page nav on home, regular nav elsewhere */}
+            <div className="hidden md:flex items-center gap-1">
+              {isLandingPage ? (
+                <LandingPageNav />
+              ) : (
+                <nav className="flex items-center gap-1">
+                  {navLinks.map((link) => (
+                    <Link
+                      key={link.to}
+                      to={link.to}
+                      className="px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent/60 rounded-lg transition-all"
+                      activeProps={{ className: 'px-3 py-1.5 text-sm font-semibold text-primary bg-primary/10 rounded-lg' }}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                  {isAdmin && (
+                    <Link
+                      to="/stripe-setup"
+                      className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent/60 rounded-lg transition-all"
+                      activeProps={{ className: 'flex items-center gap-1 px-3 py-1.5 text-sm font-semibold text-primary bg-primary/10 rounded-lg' }}
+                    >
+                      <Settings className="w-3.5 h-3.5" />
+                      Stripe Setup
+                    </Link>
+                  )}
+                </nav>
               )}
-            </nav>
+            </div>
 
             {/* Auth Button */}
             <div className="hidden md:flex items-center gap-3">
               <Button
+                ref={loginBtnRef}
+                onMouseDown={createRipple}
                 onClick={handleAuth}
                 disabled={isLoggingIn}
                 variant={isAuthenticated ? 'outline' : 'default'}
                 size="sm"
+                className={`btn-ripple transition-all ${!isAuthenticated ? 'shadow-glow hover:shadow-glow-lg font-semibold' : ''}`}
               >
                 {isLoggingIn ? 'Logging in...' : isAuthenticated ? 'Logout' : 'Login'}
               </Button>
@@ -98,8 +115,9 @@ export default function Layout({ children }: LayoutProps) {
 
             {/* Mobile Menu Toggle */}
             <button
-              className="md:hidden p-2 rounded-md text-muted-foreground hover:text-foreground"
+              className="md:hidden p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -108,12 +126,13 @@ export default function Layout({ children }: LayoutProps) {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-border bg-background px-4 py-4 space-y-3">
+          <div className="md:hidden border-t border-border/50 bg-background/98 px-4 py-3 space-y-1 animate-fade-in">
             {navLinks.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
-                className="block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-1"
+                className="flex items-center px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent/60 rounded-lg transition-colors"
+                activeProps={{ className: 'flex items-center px-3 py-2.5 text-sm font-semibold text-primary bg-primary/10 rounded-lg' }}
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {link.label}
@@ -122,23 +141,21 @@ export default function Layout({ children }: LayoutProps) {
             {isAdmin && (
               <Link
                 to="/stripe-setup"
-                className="flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-1"
+                className="flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent/60 rounded-lg transition-colors"
+                activeProps={{ className: 'flex items-center gap-1.5 px-3 py-2.5 text-sm font-semibold text-primary bg-primary/10 rounded-lg' }}
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <Settings className="w-3.5 h-3.5" />
                 Stripe Setup
               </Link>
             )}
-            <div className="pt-2">
+            <div className="pt-2 border-t border-border/50">
               <Button
-                onClick={() => {
-                  handleAuth();
-                  setMobileMenuOpen(false);
-                }}
+                onClick={() => { handleAuth(); setMobileMenuOpen(false); }}
                 disabled={isLoggingIn}
                 variant={isAuthenticated ? 'outline' : 'default'}
                 size="sm"
-                className="w-full"
+                className={`w-full btn-ripple ${!isAuthenticated ? 'shadow-glow font-semibold' : ''}`}
               >
                 {isLoggingIn ? 'Logging in...' : isAuthenticated ? 'Logout' : 'Login'}
               </Button>
@@ -147,39 +164,36 @@ export default function Layout({ children }: LayoutProps) {
         )}
       </header>
 
-      <main className="flex-1">{children}</main>
+      <main className="flex-1">
+        {children}
+      </main>
 
-      <footer className="border-t border-border bg-muted/30 py-8 mt-auto">
+      <footer className="border-t border-border/50 bg-background py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-              <Zap className="w-4 h-4 fill-primary text-primary" />
-              <span>ViralGrowth OS</span>
+            <div className="flex items-center gap-2 font-extrabold text-lg">
+              <div className="w-7 h-7 rounded-lg gradient-hero flex items-center justify-center shadow-glow">
+                <Zap className="w-3.5 h-3.5 text-white fill-white" />
+              </div>
+              <span className="gradient-text-orange">ViralGrowth OS</span>
             </div>
-            <div className="flex flex-col md:flex-row items-center gap-4 text-sm text-muted-foreground">
-              <Link to="/pricing" className="hover:text-foreground transition-colors">
-                Pricing
-              </Link>
-              <Link to="/dashboard" className="hover:text-foreground transition-colors">
-                Dashboard
-              </Link>
-            </div>
-            <p className="text-xs text-muted-foreground flex items-center gap-1">
-              Built with{' '}
-              <span className="text-primary">♥</span>{' '}
+            <p className="text-sm text-muted-foreground flex items-center gap-1.5 flex-wrap justify-center">
+              © {new Date().getFullYear()} ViralGrowth OS. Built with
+              <Heart className="w-3.5 h-3.5 text-[oklch(0.58_0.28_340)] fill-[oklch(0.58_0.28_340)]" />
               using{' '}
               <a
-                href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(
-                  typeof window !== 'undefined' ? window.location.hostname : 'viralgrowth-os'
-                )}`}
+                href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(window.location.hostname || 'viralgrowth-os')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-medium hover:text-foreground transition-colors underline underline-offset-2"
+                className="text-primary hover:underline font-medium"
               >
                 caffeine.ai
               </a>
-              {' '}© {new Date().getFullYear()}
             </p>
+            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+              <Link to="/pricing" className="hover:text-foreground transition-colors">Pricing</Link>
+              <Link to="/" className="hover:text-foreground transition-colors">Home</Link>
+            </div>
           </div>
         </div>
       </footer>

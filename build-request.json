@@ -1,72 +1,157 @@
 {
   "kind": "build_request",
-  "title": "Fix 404 canister ID not found error on production",
-  "priority": "high",
+  "title": "Add animations, interactive elements, hero section, testimonials, countdown timer, carousel, and smooth scroll navigation",
+  "projectName": "Viral Growth OS",
+  "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Ensure the correct canister ID is embedded in frontend/index.html meta tag so the ICP0.io gateway can resolve the frontend canister. Verify the canister ID in the meta tag matches the deployed frontend canister ID exactly, and that it is present at page load before any JS executes.",
+      "text": "Add smooth hover effects, fade-in animations on scroll, and slide transitions throughout the app — apply to cards, sections, and list items so elements animate into view as users scroll down the page.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-4"
         ],
         "quotes": [
-          "i tried it again and is showing error 404 canister id not found"
+          "Animations - Smooth hover effects, fade-ins, and slide transitions to bring elements to life"
         ]
       },
       "acceptanceCriteria": [
-        "The <meta name='dfinity-canister-id'> tag in frontend/index.html contains the correct deployed frontend canister ID",
-        "Loading the production URL no longer returns a 404 canister not found error",
-        "The app loads successfully on the ICP0.io gateway"
+        "Cards and section elements fade in or slide up when they enter the viewport",
+        "Hover effects are applied to interactive cards and navigation links",
+        "Transitions feel smooth and do not cause layout shift"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Ensure the backend canister ID referenced in the frontend actor configuration (useActor.ts and any generated declarations) matches the deployed backend canister ID. Regenerate or update canister ID bindings if there is a mismatch.",
+      "text": "Add pulse and ripple click animations to all primary call-to-action buttons and navigation action buttons across the app (e.g., 'Get Started', 'Generate Content', 'Upgrade', pricing tier buttons).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-4"
         ],
         "quotes": [
-          "error 404 canister id not found"
+          "Interactive buttons - Pulse effects or ripple animations on click"
         ]
       },
       "acceptanceCriteria": [
-        "The backend canister ID used in actor initialization matches the deployed backend canister",
-        "No 404 errors are thrown when the frontend attempts to communicate with the backend canister"
+        "Clicking a primary button triggers a visible ripple or pulse effect",
+        "The animation completes without blocking the button's action",
+        "Effect is applied consistently across all CTA buttons"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Audit the dfx.json and canister configuration to confirm that frontend and backend canister IDs are consistently defined and that the deployment targets the correct network (ic mainnet). Fix any misconfigured canister IDs or network targets.",
-      "target": "both",
+      "text": "Add a bold hero section at the top of the LandingPage with a visually striking banner, a compelling headline, a short subheadline describing the product value, and a prominent call-to-action button linking to the pricing or sign-up flow.",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-4"
         ],
         "quotes": [
-          "error 404 canister id not found"
+          "Hero section - A bold banner with a call-to-action button to grab attention immediately"
         ]
       },
       "acceptanceCriteria": [
-        "dfx.json references the correct canister IDs for both frontend and backend on the ic network",
-        "Deployment produces no canister-not-found errors"
+        "Hero section is the first visible section on the landing page",
+        "Contains a headline, subheadline, and at least one CTA button",
+        "Visually distinct from the rest of the page using background gradient or image treatment",
+        "CTA button links to the pricing page or triggers login"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Add a testimonials/reviews section to the LandingPage featuring at least 3 fictional customer quotes with names, roles, and avatar initials to build trust with visitors.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "Testimonials/reviews section - Build trust with customer quotes"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Section displays at least 3 testimonial cards",
+        "Each card includes a quote, customer name, and role/title",
+        "Section is visually styled consistently with the app's vibrant color scheme"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Add a countdown timer component to the LandingPage that counts down to a promotional deadline (e.g., a limited-time discount offer), creating urgency for visitors to sign up.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "Countdown timer - Create urgency for promotions or limited offers"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Countdown timer displays days, hours, minutes, and seconds",
+        "Timer updates every second in real time",
+        "Timer is placed in a prominent location on the landing page (e.g., near the hero or pricing section)",
+        "When countdown reaches zero, a fallback message is shown"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Add an image carousel/gallery section to the LandingPage that visually showcases the product's features or use cases with auto-advancing slides, manual navigation arrows, and dot indicators.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "Image carousel/gallery - Showcase products or services visually"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Carousel displays at least 3 slides with image/illustration and descriptive text",
+        "Auto-advances every 4–5 seconds",
+        "Manual previous/next navigation arrows are present and functional",
+        "Dot indicators show the current slide position",
+        "Slides transition smoothly"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Implement smooth scroll navigation on the LandingPage with anchor links in the header/navigation that scroll smoothly to corresponding sections (e.g., Features, How It Works, Pricing, Testimonials) on the same page.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "Smooth scroll navigation - Professional feel with anchor links"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Navigation links on the landing page scroll smoothly to their target sections",
+        "Each major section of the landing page has a corresponding anchor ID",
+        "Active section is visually highlighted in the navigation as the user scrolls",
+        "Scroll behavior is smooth (CSS scroll-behavior: smooth or JS equivalent)"
       ]
     }
   ],
   "constraints": [
-    "Do not change application logic, UI, or feature behavior — this is a deployment configuration fix only",
-    "Do not modify files under frontend/src/hooks/ (immutable paths)"
+    "Do not modify files in frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or frontend/src/components/ui",
+    "All new animations must respect prefers-reduced-motion accessibility setting",
+    "Testimonial customer data must be fictional/placeholder — no real personal data"
   ],
   "nonGoals": [
-    "Adding new features or UI changes",
-    "Modifying backend business logic",
-    "Changing authentication flow"
+    "No backend changes required for any of these features",
+    "No real countdown timer backend persistence — timer is frontend-only with a hardcoded end date",
+    "No real product images required — illustrations or placeholders acceptable for carousel",
+    "No changes to authentication or subscription logic"
   ],
   "imageRequirements": {
-    "required": [],
+    "required": [
+      "Abstract vibrant gradient hero banner illustration for marketing landing page (hero-banner.dim_1200x480.png)",
+      "Three feature showcase illustration cards for carousel slides showing analytics dashboard, content creation, and growth metrics with vibrant neon accents (carousel-slide-1.dim_800x400.png, carousel-slide-2.dim_800x400.png, carousel-slide-3.dim_800x400.png)"
+    ],
     "edits": []
   }
 }
