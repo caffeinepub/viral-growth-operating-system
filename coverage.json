@@ -1,58 +1,32 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-26T20:24:48.592Z",
+  "generatedAt": "2026-02-26T21:13:22.499Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 4,
-    "implemented": 3,
+    "total": 2,
+    "implemented": 1,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Integrate Internet Identity login/logout into the landing page and app navigation so that unauthenticated visitors can log in via Internet Identity and authenticated users can log out. Use the existing `useInternetIdentity` hook and the `Layout` component's header for placement.",
+        "summary": "Update the Elite tier price display on the PricingPage to show $99 (per month) instead of the current incorrect price.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/Layout.tsx"
+          "frontend/src/pages/PricingPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/Layout.tsx"
+          "frontend/src/pages/PricingPage.tsx"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "On first login, present the `ProfileSetupModal` to collect the user's name and email and save it to the backend via `useSaveCallerUserProfile`. Subsequent logins should skip the modal if a profile already exists.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/App.tsx",
-          "frontend/src/hooks/useGetCallerUserProfile.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-3",
-        "summary": "Ensure the backend actor is initialised with the authenticated Internet Identity principal so that all backend calls (profile fetch, content generation, subscription queries) are made on behalf of the logged-in user. Anonymous actor should be used only when no identity is available.",
-        "status": "missing",
-        "plannedFiles": [
-          "frontend/src/hooks/useActor.ts"
-        ],
+        "summary": "Ensure the Elite tier price in the backend (if stored or referenced in main.mo, e.g. for Stripe checkout amount or plan metadata) reflects $99.",
+        "status": "unknown",
+        "plannedFiles": [],
         "matchedFiles": []
-      },
-      {
-        "id": "REQ-4",
-        "summary": "After login, redirect users to the Dashboard page where they can view their subscription tier, content request history, and manage their account. The hero section CTA should direct authenticated users to /generate and unauthenticated users to /pricing, as already wired in `HeroSection.tsx`.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/HeroSection.tsx",
-          "frontend/src/pages/Dashboard.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/Dashboard.tsx"
-        ]
       }
     ]
   },
@@ -62,13 +36,7 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
-    "frontend/src/backend.ts",
-    "frontend/src/components/Layout.tsx",
-    "frontend/src/components/ProfileSetupModal.tsx",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
-    "frontend/src/pages/Dashboard.tsx",
+    "frontend/src/pages/PricingPage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

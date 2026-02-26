@@ -68,6 +68,9 @@ actor {
     #customerSubscriptionUpdated;
   };
 
+  // Store updated Elite tier price in cents ($99 -> 9900 cents)
+  let eliteTierPriceInCents = 9900;
+
   let userSubscriptions = Map.empty<Principal, UserSubscription>();
   let brandVoiceProfiles = Map.empty<Principal, BrandVoiceProfile>();
   let contentRequests = Map.empty<Principal, [ContentGenerationRequest]>();
@@ -318,9 +321,9 @@ actor {
       Runtime.trap("Unauthorized: Only users can create checkout sessions");
     };
 
-    let (productId, tierName) = switch (tier) {
-      case (#pro) { (proProductId, "Pro") };
-      case (#elite) { (eliteProductId, "Elite") };
+    let (productId, tierName, price) = switch (tier) {
+      case (#pro) { (proProductId, "Pro", 0) };
+      case (#elite) { (eliteProductId, "Elite", eliteTierPriceInCents) };
       case (#free) {
         Runtime.trap("Invalid tier. Cannot create checkout session for free tier.");
       };
@@ -330,7 +333,7 @@ actor {
       currency = "usd";
       productName = tierName;
       productDescription = "Monthly subscription for " # tierName # " tier";
-      priceInCents = 0;
+      priceInCents = price;
       quantity = 1;
     };
 

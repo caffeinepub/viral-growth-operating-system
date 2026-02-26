@@ -1,80 +1,21 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add Internet Identity authentication for customer accounts and preference saving",
+  "title": "Fix Elite tier price to $99",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Integrate Internet Identity login/logout into the landing page and app navigation so that unauthenticated visitors can log in via Internet Identity and authenticated users can log out",
+      "summary": "Update the Elite tier price display on the PricingPage to show $99 (per month) instead of the current incorrect price",
       "acceptanceCriteria": [
-        "A 'Sign In' button is visible in the header for unauthenticated users",
-        "Clicking 'Sign In' opens the Internet Identity authentication flow",
-        "After successful login, the header shows a 'Sign Out' button and the user's identity is accessible throughout the app",
-        "Clicking 'Sign Out' clears the session and returns the user to the unauthenticated state"
+        "The Elite tier card on the pricing page displays '$99' as its price.",
+        "No other tier prices are changed.",
+        "The price label is consistent with the existing formatting style used for other tiers."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/Layout.tsx",
+          "path": "frontend/src/pages/PricingPage.tsx",
           "operation": "modify",
-          "description": "Add Internet Identity login/logout button to the header using the existing useInternetIdentity hook. The button should display 'Sign In' for unauthenticated users and 'Sign Out' for authenticated users. On logout, clear the React Query cache using queryClient.clear(). Use the authorization component's recommended LoginButton pattern with proper disabled state during login flow and error handling for 'User is already authenticated' errors. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "On first login, present the ProfileSetupModal to collect the user's name and email and save it to the backend via useSaveCallerUserProfile. Subsequent logins should skip the modal if a profile already exists",
-      "acceptanceCriteria": [
-        "The ProfileSetupModal appears automatically after a user's first successful Internet Identity login",
-        "Submitting the modal saves the name and email to the backend and shows a success toast",
-        "Returning users who already have a profile do not see the modal on subsequent logins"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Add profile setup modal orchestration at the app root level. Use useInternetIdentity to check isAuthenticated and useGetCallerUserProfile to fetch the user's profile. Show ProfileSetupModal when isAuthenticated is true, profileLoading is false, isFetched is true, and userProfile is null (following the authorization component's flash-prevention pattern). After successful profile save, invalidate the currentUserProfile query and navigate to /dashboard. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/hooks/useGetCallerUserProfile.ts",
-          "operation": "modify",
-          "description": "Update the hook to properly merge actor-loading state into the query's loading state by returning isLoading: actorFetching || query.isLoading and isFetched: !!actor && query.isFetched, as specified in the authorization component's flash-prevention pattern. This ensures the ProfileSetupModal does not flash on page load. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "summary": "Ensure the backend actor is initialised with the authenticated Internet Identity principal so that all backend calls are made on behalf of the logged-in user",
-      "acceptanceCriteria": [
-        "Authenticated backend calls carry the user's Internet Identity principal",
-        "Profile data, subscription tier, and content history are scoped to the authenticated user",
-        "Anonymous users receive appropriate empty/default responses from the backend"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useActor.ts",
-          "operation": "modify",
-          "description": "Verify that the actor is correctly created with the authenticated identity from useInternetIdentity when available, and falls back to an anonymous actor when no identity is present. Ensure that whenever the identity changes (login or logout), all React Query caches are invalidated using queryClient.invalidateQueries() so that subsequent backend calls use the correct principal. This ensures profile data, subscription tier, and content history are properly scoped to the authenticated user."
-        }
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "summary": "After login, redirect users to the Dashboard page where they can view their subscription tier, content request history, and manage their account",
-      "acceptanceCriteria": [
-        "Authenticated users who land on the root page see a CTA pointing to /generate",
-        "After completing the profile setup modal, the user is navigated to /dashboard",
-        "The dashboard correctly displays the authenticated user's subscription and history"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/HeroSection.tsx",
-          "operation": "modify",
-          "description": "Verify that the existing CTA logic correctly routes authenticated users to /generate and unauthenticated users to /pricing as already wired. No changes should be needed if this is already in place."
-        },
-        {
-          "path": "frontend/src/pages/Dashboard.tsx",
-          "operation": "modify",
-          "description": "Ensure the Dashboard page correctly checks authentication status and displays the user's subscription tier, enabled features, and content request history using the existing hooks (useGetMySubscription, useCheckUserTier, useGetContentRequests). Unauthenticated users should see a prompt to get started with a link to the pricing page. The page should handle loading states with skeletons and display the ProfileSetupModal for new users as orchestrated in App.tsx."
+          "description": "Update the Elite tier price display from its current value to $99. Locate the Elite tier pricing card (likely the third tier in the tiers array or JSX structure) and modify the price field to show '$99' while keeping the '/month' suffix and existing styling. Ensure the price change applies only to the Elite tier display without affecting Free or Pro tier prices."
         }
       ]
     }

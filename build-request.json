@@ -1,92 +1,52 @@
 {
   "kind": "build_request",
-  "title": "Add Internet Identity authentication for customer accounts and preference saving",
+  "title": "Fix Elite tier price to $99",
+  "projectName": "Viral Growth OS",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Integrate Internet Identity login/logout into the landing page and app navigation so that unauthenticated visitors can log in via Internet Identity and authenticated users can log out. Use the existing `useInternetIdentity` hook and the `Layout` component's header for placement.",
+      "text": "Update the Elite tier price display on the PricingPage to show $99 (per month) instead of the current incorrect price.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-last"
         ],
         "quotes": [
-          "Connect Internet Identity so customers can create accounts and save their preferences"
+          "elite tier was supposed be 99 dollars. can you change it"
         ]
       },
       "acceptanceCriteria": [
-        "A 'Sign In' button is visible in the header for unauthenticated users",
-        "Clicking 'Sign In' opens the Internet Identity authentication flow",
-        "After successful login, the header shows a 'Sign Out' button and the user's identity is accessible throughout the app",
-        "Clicking 'Sign Out' clears the session and returns the user to the unauthenticated state"
+        "The Elite tier card on the pricing page displays '$99' as its price.",
+        "No other tier prices are changed.",
+        "The price label is consistent with the existing formatting style used for other tiers."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "On first login, present the `ProfileSetupModal` to collect the user's name and email and save it to the backend via `useSaveCallerUserProfile`. Subsequent logins should skip the modal if a profile already exists.",
-      "target": "frontend",
+      "text": "Ensure the Elite tier price in the backend (if stored or referenced in main.mo, e.g. for Stripe checkout amount or plan metadata) reflects $99.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-last"
         ],
         "quotes": [
-          "customers can create accounts and save their preferences"
+          "elite tier was supposed be 99 dollars. can you change it"
         ]
       },
       "acceptanceCriteria": [
-        "The ProfileSetupModal appears automatically after a user's first successful Internet Identity login",
-        "Submitting the modal saves the name and email to the backend and shows a success toast",
-        "Returning users who already have a profile do not see the modal on subsequent logins"
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "text": "Ensure the backend actor is initialised with the authenticated Internet Identity principal so that all backend calls (profile fetch, content generation, subscription queries) are made on behalf of the logged-in user. Anonymous actor should be used only when no identity is available.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "customers can create accounts and save their preferences"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Authenticated backend calls carry the user's Internet Identity principal",
-        "Profile data, subscription tier, and content history are scoped to the authenticated user",
-        "Anonymous users receive appropriate empty/default responses from the backend"
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "After login, redirect users to the Dashboard page where they can view their subscription tier, content request history, and manage their account. The hero section CTA should direct authenticated users to /generate and unauthenticated users to /pricing, as already wired in `HeroSection.tsx`.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "customers can create accounts and save their preferences"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Authenticated users who land on the root page see a CTA pointing to /generate",
-        "After completing the profile setup modal, the user is navigated to /dashboard",
-        "The dashboard correctly displays the authenticated user's subscription and history"
+        "Any hardcoded Elite tier price value in the backend actor is set to 99 (dollars).",
+        "No other tier prices are modified."
       ]
     }
   ],
   "constraints": [
-    "Do not modify frontend/src/hooks/useInternetIdentity.ts or frontend/src/hooks/useActor.ts — use them as-is",
-    "Do not modify files under frontend/src/components/ui",
-    "All Motoko logic must remain in the single backend/main.mo actor"
+    "Do not change the Free or Pro tier prices.",
+    "Do not alter any other pricing page layout or feature list content."
   ],
   "nonGoals": [
-    "Third-party authentication providers (GitHub, Google, Facebook)",
-    "Email verification or password-based login",
-    "Changes to the Stripe payment flow",
-    "New backend data models beyond what is already defined for user profiles and subscriptions"
+    "Changing Stripe product/price IDs or live Stripe configuration.",
+    "Modifying any other subscription tier details or features."
   ],
   "imageRequirements": {
     "required": [],

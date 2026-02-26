@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-integrate-internet-identity-login-logout-into-the-landing-page-and-app-navigation-so-that-unauthenticated-visitors-can-log-in-via-internet-identity-and-authenticated-users-can-log-out-use-the-existing-useinternetidentity-hook-and-the-layout-component-s-header-for-placement",
-      "featureTitle": "Integrate Internet Identity login/logout into the landing page and app navigation so that unauthenticated visitors can log in via Internet Identity and authenticated users can log out. Use the existing `useInternetIdentity` hook and the `Layout` component's header for placement.",
+      "featureId": "feature-update-the-elite-tier-price-display-on-the-pricingpage-to-show-99-per-month-instead-of-the-current-incorrect-price",
+      "featureTitle": "Update the Elite tier price display on the PricingPage to show $99 (per month) instead of the current incorrect price.",
       "files": [
-        "frontend/src/components/Layout.tsx"
+        "frontend/src/pages/PricingPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -20,50 +20,6 @@
       ],
       "testIds": [
         "REQ-1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-on-first-login-present-the-profilesetupmodal-to-collect-the-user-s-name-and-email-and-save-it-to-the-backend-via-usesavecalleruserprofile-subsequent-logins-should-skip-the-modal-if-a-profile-already-exists",
-      "featureTitle": "On first login, present the `ProfileSetupModal` to collect the user's name and email and save it to the backend via `useSaveCallerUserProfile`. Subsequent logins should skip the modal if a profile already exists.",
-      "files": [
-        "frontend/src/App.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "stripe@3.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "http-outcalls@3.0.0",
-        "blob-storage@4.0.0"
-      ],
-      "testIds": [
-        "REQ-2"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-after-login-redirect-users-to-the-dashboard-page-where-they-can-view-their-subscription-tier-content-request-history-and-manage-their-account-the-hero-section-cta-should-direct-authenticated-users-to-generate-and-unauthenticated-users-to-pricing-as-already-wired-in-herosection-tsx",
-      "featureTitle": "After login, redirect users to the Dashboard page where they can view their subscription tier, content request history, and manage their account. The hero section CTA should direct authenticated users to /generate and unauthenticated users to /pricing, as already wired in `HeroSection.tsx`.",
-      "files": [
-        "frontend/src/pages/Dashboard.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "stripe@3.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "http-outcalls@3.0.0",
-        "blob-storage@4.0.0"
-      ],
-      "testIds": [
-        "REQ-4"
       ],
       "confidence": "high"
     }

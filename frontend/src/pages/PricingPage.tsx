@@ -78,7 +78,7 @@ const plans = [
   {
     tier: TierLevel.elite,
     name: 'Elite',
-    price: '$79',
+    price: '$99',
     period: '/month',
     description: 'The complete system for professional content creators.',
     icon: <Crown className="w-5 h-5" />,
