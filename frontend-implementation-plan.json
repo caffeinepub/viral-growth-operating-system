@@ -1,217 +1,80 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add animations, interactive elements, hero section, testimonials, countdown timer, carousel, and smooth scroll navigation",
+  "title": "Add Internet Identity authentication for customer accounts and preference saving",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Add smooth hover effects, fade-in animations on scroll, and slide transitions throughout the app",
+      "summary": "Integrate Internet Identity login/logout into the landing page and app navigation so that unauthenticated visitors can log in via Internet Identity and authenticated users can log out",
       "acceptanceCriteria": [
-        "Cards and section elements fade in or slide up when they enter the viewport",
-        "Hover effects are applied to interactive cards and navigation links",
-        "Transitions feel smooth and do not cause layout shift"
+        "A 'Sign In' button is visible in the header for unauthenticated users",
+        "Clicking 'Sign In' opens the Internet Identity authentication flow",
+        "After successful login, the header shows a 'Sign Out' button and the user's identity is accessible throughout the app",
+        "Clicking 'Sign Out' clears the session and returns the user to the unauthenticated state"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/index.css",
-          "operation": "modify",
-          "description": "Add CSS keyframe animations for fade-in, slide-up, and hover effects; ensure animations respect prefers-reduced-motion accessibility setting"
-        },
-        {
-          "path": "frontend/src/hooks/useScrollAnimation.ts",
-          "operation": "create",
-          "description": "Create a custom hook using Intersection Observer API to detect when elements enter the viewport and trigger fade-in or slide-up animations"
-        },
-        {
-          "path": "frontend/src/pages/LandingPage.tsx",
-          "operation": "modify",
-          "description": "Apply useScrollAnimation hook to feature cards, sections, and list items; add hover effect classes to interactive elements"
-        },
-        {
-          "path": "frontend/src/pages/Dashboard.tsx",
-          "operation": "modify",
-          "description": "Apply fade-in scroll animations to subscription tier display and content request history cards using useScrollAnimation hook"
-        },
-        {
-          "path": "frontend/src/pages/PricingPage.tsx",
-          "operation": "modify",
-          "description": "Apply scroll animations to pricing tier cards and add hover scale effects to plan selection buttons"
-        },
-        {
           "path": "frontend/src/components/Layout.tsx",
           "operation": "modify",
-          "description": "Add smooth hover effects to navigation links in the header"
+          "description": "Add Internet Identity login/logout button to the header using the existing useInternetIdentity hook. The button should display 'Sign In' for unauthenticated users and 'Sign Out' for authenticated users. On logout, clear the React Query cache using queryClient.clear(). Use the authorization component's recommended LoginButton pattern with proper disabled state during login flow and error handling for 'User is already authenticated' errors. Verify the component's usage instructions before implementing."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Add pulse and ripple click animations to all primary call-to-action buttons",
+      "summary": "On first login, present the ProfileSetupModal to collect the user's name and email and save it to the backend via useSaveCallerUserProfile. Subsequent logins should skip the modal if a profile already exists",
       "acceptanceCriteria": [
-        "Clicking a primary button triggers a visible ripple or pulse effect",
-        "The animation completes without blocking the button's action",
-        "Effect is applied consistently across all CTA buttons"
+        "The ProfileSetupModal appears automatically after a user's first successful Internet Identity login",
+        "Submitting the modal saves the name and email to the backend and shows a success toast",
+        "Returning users who already have a profile do not see the modal on subsequent logins"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/index.css",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Add CSS keyframe animations for ripple and pulse effects on button clicks; ensure animations respect prefers-reduced-motion"
+          "description": "Add profile setup modal orchestration at the app root level. Use useInternetIdentity to check isAuthenticated and useGetCallerUserProfile to fetch the user's profile. Show ProfileSetupModal when isAuthenticated is true, profileLoading is false, isFetched is true, and userProfile is null (following the authorization component's flash-prevention pattern). After successful profile save, invalidate the currentUserProfile query and navigate to /dashboard. Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/hooks/useRippleEffect.ts",
-          "operation": "create",
-          "description": "Create a custom hook that handles ripple animation logic on click events, returning a ref and click handler to be applied to buttons"
-        },
-        {
-          "path": "frontend/src/pages/LandingPage.tsx",
+          "path": "frontend/src/hooks/useGetCallerUserProfile.ts",
           "operation": "modify",
-          "description": "Apply useRippleEffect hook to 'Get Started' and other primary CTA buttons on the landing page"
-        },
-        {
-          "path": "frontend/src/pages/PricingPage.tsx",
-          "operation": "modify",
-          "description": "Apply ripple effect to all pricing tier selection buttons using useRippleEffect hook"
-        },
-        {
-          "path": "frontend/src/pages/ContentGenerator.tsx",
-          "operation": "modify",
-          "description": "Apply ripple effect to the 'Generate Content' button and other primary action buttons"
-        },
-        {
-          "path": "frontend/src/components/Layout.tsx",
-          "operation": "modify",
-          "description": "Apply ripple effect to the login/logout button in the navigation header"
+          "description": "Update the hook to properly merge actor-loading state into the query's loading state by returning isLoading: actorFetching || query.isLoading and isFetched: !!actor && query.isFetched, as specified in the authorization component's flash-prevention pattern. This ensures the ProfileSetupModal does not flash on page load. Verify the component's usage instructions before implementing."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Add a bold hero section at the top of the LandingPage with banner, headline, subheadline, and CTA",
+      "summary": "Ensure the backend actor is initialised with the authenticated Internet Identity principal so that all backend calls are made on behalf of the logged-in user",
       "acceptanceCriteria": [
-        "Hero section is the first visible section on the landing page",
-        "Contains a headline, subheadline, and at least one CTA button",
-        "Visually distinct from the rest of the page using background gradient or image treatment",
-        "CTA button links to the pricing page or triggers login"
+        "Authenticated backend calls carry the user's Internet Identity principal",
+        "Profile data, subscription tier, and content history are scoped to the authenticated user",
+        "Anonymous users receive appropriate empty/default responses from the backend"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/HeroSection.tsx",
-          "operation": "create",
-          "description": "Create a hero section component with a vibrant gradient background, bold headline ('Viral Growth OS - Content That Converts'), compelling subheadline, and a prominent CTA button linking to pricing; integrate the generated hero banner image (frontend/public/assets/generated/hero-banner.dim_1200x480.png) as a visual element"
-        },
-        {
-          "path": "frontend/src/pages/LandingPage.tsx",
+          "path": "frontend/src/hooks/useActor.ts",
           "operation": "modify",
-          "description": "Import and render HeroSection component as the first section at the top of the page, before existing feature and how-it-works sections"
+          "description": "Verify that the actor is correctly created with the authenticated identity from useInternetIdentity when available, and falls back to an anonymous actor when no identity is present. Ensure that whenever the identity changes (login or logout), all React Query caches are invalidated using queryClient.invalidateQueries() so that subsequent backend calls use the correct principal. This ensures profile data, subscription tier, and content history are properly scoped to the authenticated user."
         }
       ]
     },
     {
       "id": "REQ-4",
-      "summary": "Add a testimonials/reviews section to the LandingPage with fictional customer quotes",
+      "summary": "After login, redirect users to the Dashboard page where they can view their subscription tier, content request history, and manage their account",
       "acceptanceCriteria": [
-        "Section displays at least 3 testimonial cards",
-        "Each card includes a quote, customer name, and role/title",
-        "Section is visually styled consistently with the app's vibrant color scheme"
+        "Authenticated users who land on the root page see a CTA pointing to /generate",
+        "After completing the profile setup modal, the user is navigated to /dashboard",
+        "The dashboard correctly displays the authenticated user's subscription and history"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/TestimonialsSection.tsx",
-          "operation": "create",
-          "description": "Create a testimonials section component displaying 3 fictional customer testimonial cards with quotes, names, roles, and avatar initials; style with vibrant accent colors consistent with the app theme"
-        },
-        {
-          "path": "frontend/src/pages/LandingPage.tsx",
+          "path": "frontend/src/components/HeroSection.tsx",
           "operation": "modify",
-          "description": "Import and render TestimonialsSection component after the how-it-works section and before the final CTA"
-        }
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "summary": "Add a countdown timer component to the LandingPage creating urgency for promotional deadline",
-      "acceptanceCriteria": [
-        "Countdown timer displays days, hours, minutes, and seconds",
-        "Timer updates every second in real time",
-        "Timer is placed in a prominent location on the landing page (e.g., near the hero or pricing section)",
-        "When countdown reaches zero, a fallback message is shown"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/CountdownTimer.tsx",
-          "operation": "create",
-          "description": "Create a countdown timer component that counts down to a hardcoded promotional deadline (e.g., 7 days from now), updating every second with days, hours, minutes, and seconds display; show a fallback message ('Offer ended - check back soon!') when countdown reaches zero"
+          "description": "Verify that the existing CTA logic correctly routes authenticated users to /generate and unauthenticated users to /pricing as already wired. No changes should be needed if this is already in place."
         },
         {
-          "path": "frontend/src/hooks/useCountdown.ts",
-          "operation": "create",
-          "description": "Create a custom hook that manages countdown state, calculates time remaining from a target date, and updates every second using setInterval; return formatted time units and isExpired flag"
-        },
-        {
-          "path": "frontend/src/pages/LandingPage.tsx",
+          "path": "frontend/src/pages/Dashboard.tsx",
           "operation": "modify",
-          "description": "Import and render CountdownTimer component in a prominent location near the hero section or above the pricing CTA with messaging like 'Limited Time Offer - Act Now!'"
-        }
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "summary": "Add an image carousel/gallery section to the LandingPage showcasing product features",
-      "acceptanceCriteria": [
-        "Carousel displays at least 3 slides with image/illustration and descriptive text",
-        "Auto-advances every 4–5 seconds",
-        "Manual previous/next navigation arrows are present and functional",
-        "Dot indicators show the current slide position",
-        "Slides transition smoothly"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/FeatureCarousel.tsx",
-          "operation": "create",
-          "description": "Create a feature carousel component displaying 3 slides using the generated carousel images (frontend/public/assets/generated/carousel-slide-1.dim_800x400.png, carousel-slide-2.dim_800x400.png, carousel-slide-3.dim_800x400.png); implement auto-advance every 4 seconds, manual previous/next arrows, dot indicators, and smooth slide transitions"
-        },
-        {
-          "path": "frontend/src/hooks/useCarousel.ts",
-          "operation": "create",
-          "description": "Create a custom hook managing carousel state including current slide index, auto-advance timer, manual navigation handlers (next, prev, goTo), and cleanup on unmount"
-        },
-        {
-          "path": "frontend/src/pages/LandingPage.tsx",
-          "operation": "modify",
-          "description": "Import and render FeatureCarousel component after the hero section and before the how-it-works section"
-        }
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "summary": "Implement smooth scroll navigation on the LandingPage with anchor links",
-      "acceptanceCriteria": [
-        "Navigation links on the landing page scroll smoothly to their target sections",
-        "Each major section of the landing page has a corresponding anchor ID",
-        "Active section is visually highlighted in the navigation as the user scrolls",
-        "Scroll behavior is smooth (CSS scroll-behavior: smooth or JS equivalent)"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/LandingPage.tsx",
-          "operation": "modify",
-          "description": "Add unique anchor IDs to major sections (hero, features, how-it-works, carousel, testimonials, pricing-cta); implement smooth scroll navigation using CSS scroll-behavior: smooth or scrollIntoView with smooth behavior"
-        },
-        {
-          "path": "frontend/src/components/LandingPageNav.tsx",
-          "operation": "create",
-          "description": "Create a landing page-specific navigation component with anchor links to each major section; implement scroll spy functionality to highlight the active section link as the user scrolls"
-        },
-        {
-          "path": "frontend/src/hooks/useScrollSpy.ts",
-          "operation": "create",
-          "description": "Create a custom hook using Intersection Observer to track which section is currently visible in the viewport and return the active section ID for highlighting in navigation"
-        },
-        {
-          "path": "frontend/src/components/Layout.tsx",
-          "operation": "modify",
-          "description": "Conditionally render LandingPageNav component when on the landing page route, replacing or augmenting the standard navigation links"
+          "description": "Ensure the Dashboard page correctly checks authentication status and displays the user's subscription tier, enabled features, and content request history using the existing hooks (useGetMySubscription, useCheckUserTier, useGetContentRequests). Unauthenticated users should see a prompt to get started with a link to the pricing page. The page should handle loading states with skeletons and display the ProfileSetupModal for new users as orchestrated in App.tsx."
         }
       ]
     }

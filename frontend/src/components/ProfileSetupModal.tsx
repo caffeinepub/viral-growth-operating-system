@@ -13,7 +13,11 @@ import { Label } from '@/components/ui/label';
 import { Loader2, User } from 'lucide-react';
 import { toast } from 'sonner';
 
-export default function ProfileSetupModal() {
+interface ProfileSetupModalProps {
+  onSuccess?: () => void;
+}
+
+export default function ProfileSetupModal({ onSuccess }: ProfileSetupModalProps) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const saveProfile = useSaveCallerUserProfile();
@@ -26,6 +30,7 @@ export default function ProfileSetupModal() {
     try {
       await saveProfile.mutateAsync({ name: name.trim(), email: email.trim() });
       toast.success('Profile saved! Welcome to ViralGrowth OS!');
+      onSuccess?.();
     } catch (error: any) {
       toast.error(error.message || 'Failed to save profile. Please try again.');
     }

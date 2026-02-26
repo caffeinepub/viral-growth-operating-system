@@ -1,157 +1,95 @@
 {
   "kind": "build_request",
-  "title": "Add animations, interactive elements, hero section, testimonials, countdown timer, carousel, and smooth scroll navigation",
-  "projectName": "Viral Growth OS",
+  "title": "Add Internet Identity authentication for customer accounts and preference saving",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Add smooth hover effects, fade-in animations on scroll, and slide transitions throughout the app — apply to cards, sections, and list items so elements animate into view as users scroll down the page.",
+      "text": "Integrate Internet Identity login/logout into the landing page and app navigation so that unauthenticated visitors can log in via Internet Identity and authenticated users can log out. Use the existing `useInternetIdentity` hook and the `Layout` component's header for placement.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-4"
         ],
         "quotes": [
-          "Animations - Smooth hover effects, fade-ins, and slide transitions to bring elements to life"
+          "Connect Internet Identity so customers can create accounts and save their preferences"
         ]
       },
       "acceptanceCriteria": [
-        "Cards and section elements fade in or slide up when they enter the viewport",
-        "Hover effects are applied to interactive cards and navigation links",
-        "Transitions feel smooth and do not cause layout shift"
+        "A 'Sign In' button is visible in the header for unauthenticated users",
+        "Clicking 'Sign In' opens the Internet Identity authentication flow",
+        "After successful login, the header shows a 'Sign Out' button and the user's identity is accessible throughout the app",
+        "Clicking 'Sign Out' clears the session and returns the user to the unauthenticated state"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Add pulse and ripple click animations to all primary call-to-action buttons and navigation action buttons across the app (e.g., 'Get Started', 'Generate Content', 'Upgrade', pricing tier buttons).",
+      "text": "On first login, present the `ProfileSetupModal` to collect the user's name and email and save it to the backend via `useSaveCallerUserProfile`. Subsequent logins should skip the modal if a profile already exists.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-4"
         ],
         "quotes": [
-          "Interactive buttons - Pulse effects or ripple animations on click"
+          "customers can create accounts and save their preferences"
         ]
       },
       "acceptanceCriteria": [
-        "Clicking a primary button triggers a visible ripple or pulse effect",
-        "The animation completes without blocking the button's action",
-        "Effect is applied consistently across all CTA buttons"
+        "The ProfileSetupModal appears automatically after a user's first successful Internet Identity login",
+        "Submitting the modal saves the name and email to the backend and shows a success toast",
+        "Returning users who already have a profile do not see the modal on subsequent logins"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Add a bold hero section at the top of the LandingPage with a visually striking banner, a compelling headline, a short subheadline describing the product value, and a prominent call-to-action button linking to the pricing or sign-up flow.",
-      "target": "frontend",
+      "text": "Ensure the backend actor is initialised with the authenticated Internet Identity principal so that all backend calls (profile fetch, content generation, subscription queries) are made on behalf of the logged-in user. Anonymous actor should be used only when no identity is available.",
+      "target": "both",
       "source": {
         "messageIds": [
           "msg-4"
         ],
         "quotes": [
-          "Hero section - A bold banner with a call-to-action button to grab attention immediately"
+          "customers can create accounts and save their preferences"
         ]
       },
       "acceptanceCriteria": [
-        "Hero section is the first visible section on the landing page",
-        "Contains a headline, subheadline, and at least one CTA button",
-        "Visually distinct from the rest of the page using background gradient or image treatment",
-        "CTA button links to the pricing page or triggers login"
+        "Authenticated backend calls carry the user's Internet Identity principal",
+        "Profile data, subscription tier, and content history are scoped to the authenticated user",
+        "Anonymous users receive appropriate empty/default responses from the backend"
       ]
     },
     {
       "id": "REQ-4",
-      "text": "Add a testimonials/reviews section to the LandingPage featuring at least 3 fictional customer quotes with names, roles, and avatar initials to build trust with visitors.",
+      "text": "After login, redirect users to the Dashboard page where they can view their subscription tier, content request history, and manage their account. The hero section CTA should direct authenticated users to /generate and unauthenticated users to /pricing, as already wired in `HeroSection.tsx`.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-4"
         ],
         "quotes": [
-          "Testimonials/reviews section - Build trust with customer quotes"
+          "customers can create accounts and save their preferences"
         ]
       },
       "acceptanceCriteria": [
-        "Section displays at least 3 testimonial cards",
-        "Each card includes a quote, customer name, and role/title",
-        "Section is visually styled consistently with the app's vibrant color scheme"
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Add a countdown timer component to the LandingPage that counts down to a promotional deadline (e.g., a limited-time discount offer), creating urgency for visitors to sign up.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "Countdown timer - Create urgency for promotions or limited offers"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Countdown timer displays days, hours, minutes, and seconds",
-        "Timer updates every second in real time",
-        "Timer is placed in a prominent location on the landing page (e.g., near the hero or pricing section)",
-        "When countdown reaches zero, a fallback message is shown"
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "text": "Add an image carousel/gallery section to the LandingPage that visually showcases the product's features or use cases with auto-advancing slides, manual navigation arrows, and dot indicators.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "Image carousel/gallery - Showcase products or services visually"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Carousel displays at least 3 slides with image/illustration and descriptive text",
-        "Auto-advances every 4–5 seconds",
-        "Manual previous/next navigation arrows are present and functional",
-        "Dot indicators show the current slide position",
-        "Slides transition smoothly"
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "text": "Implement smooth scroll navigation on the LandingPage with anchor links in the header/navigation that scroll smoothly to corresponding sections (e.g., Features, How It Works, Pricing, Testimonials) on the same page.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "Smooth scroll navigation - Professional feel with anchor links"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Navigation links on the landing page scroll smoothly to their target sections",
-        "Each major section of the landing page has a corresponding anchor ID",
-        "Active section is visually highlighted in the navigation as the user scrolls",
-        "Scroll behavior is smooth (CSS scroll-behavior: smooth or JS equivalent)"
+        "Authenticated users who land on the root page see a CTA pointing to /generate",
+        "After completing the profile setup modal, the user is navigated to /dashboard",
+        "The dashboard correctly displays the authenticated user's subscription and history"
       ]
     }
   ],
   "constraints": [
-    "Do not modify files in frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or frontend/src/components/ui",
-    "All new animations must respect prefers-reduced-motion accessibility setting",
-    "Testimonial customer data must be fictional/placeholder — no real personal data"
+    "Do not modify frontend/src/hooks/useInternetIdentity.ts or frontend/src/hooks/useActor.ts — use them as-is",
+    "Do not modify files under frontend/src/components/ui",
+    "All Motoko logic must remain in the single backend/main.mo actor"
   ],
   "nonGoals": [
-    "No backend changes required for any of these features",
-    "No real countdown timer backend persistence — timer is frontend-only with a hardcoded end date",
-    "No real product images required — illustrations or placeholders acceptable for carousel",
-    "No changes to authentication or subscription logic"
+    "Third-party authentication providers (GitHub, Google, Facebook)",
+    "Email verification or password-based login",
+    "Changes to the Stripe payment flow",
+    "New backend data models beyond what is already defined for user profiles and subscriptions"
   ],
   "imageRequirements": {
-    "required": [
-      "Abstract vibrant gradient hero banner illustration for marketing landing page (hero-banner.dim_1200x480.png)",
-      "Three feature showcase illustration cards for carousel slides showing analytics dashboard, content creation, and growth metrics with vibrant neon accents (carousel-slide-1.dim_800x400.png, carousel-slide-2.dim_800x400.png, carousel-slide-3.dim_800x400.png)"
-    ],
+    "required": [],
     "edits": []
   }
 }

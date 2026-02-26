@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { createRouter, RouterProvider, createRootRoute, createRoute, Outlet } from '@tanstack/react-router';
+import { createRouter, RouterProvider, createRootRoute, createRoute, Outlet, useNavigate } from '@tanstack/react-router';
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from '@/components/ui/sonner';
 import Layout from './components/Layout';
@@ -11,6 +11,9 @@ import SubscriptionManagement from './pages/SubscriptionManagement';
 import PaymentSuccess from './pages/PaymentSuccess';
 import PaymentFailure from './pages/PaymentFailure';
 import StripeSetup from './pages/StripeSetup';
+import ProfileSetupModal from './components/ProfileSetupModal';
+import { useInternetIdentity } from './hooks/useInternetIdentity';
+import { useGetCallerUserProfile } from './hooks/useGetCallerUserProfile';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,12 +24,31 @@ const queryClient = new QueryClient({
   },
 });
 
+function AppShell() {
+  const { identity } = useInternetIdentity();
+  const isAuthenticated = !!identity;
+  const navigate = useNavigate();
+
+  const { data: userProfile, isLoading: profileLoading, isFetched } = useGetCallerUserProfile();
+
+  const showProfileSetup = isAuthenticated && !profileLoading && isFetched && userProfile === null;
+
+  const handleProfileSuccess = () => {
+    navigate({ to: '/dashboard' });
+  };
+
+  return (
+    <>
+      {showProfileSetup && <ProfileSetupModal onSuccess={handleProfileSuccess} />}
+      <Layout>
+        <Outlet />
+      </Layout>
+    </>
+  );
+}
+
 const rootRoute = createRootRoute({
-  component: () => (
-    <Layout>
-      <Outlet />
-    </Layout>
-  ),
+  component: AppShell,
 });
 
 const indexRoute = createRoute({

@@ -1,157 +1,74 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-26T20:16:44.143Z",
+  "generatedAt": "2026-02-26T20:24:48.592Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 7,
-    "implemented": 7,
+    "total": 4,
+    "implemented": 3,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Add smooth hover effects, fade-in animations on scroll, and slide transitions throughout the app — apply to cards, sections, and list items so elements animate into view as users scroll down the page.",
+        "summary": "Integrate Internet Identity login/logout into the landing page and app navigation so that unauthenticated visitors can log in via Internet Identity and authenticated users can log out. Use the existing `useInternetIdentity` hook and the `Layout` component's header for placement.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/index.css",
-          "frontend/src/hooks/useScrollAnimation.ts",
-          "frontend/src/pages/LandingPage.tsx",
-          "frontend/src/pages/Dashboard.tsx",
-          "frontend/src/pages/PricingPage.tsx",
           "frontend/src/components/Layout.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/index.css",
-          "frontend/src/hooks/useScrollAnimation.ts",
-          "frontend/src/pages/LandingPage.tsx",
-          "frontend/src/pages/PricingPage.tsx",
           "frontend/src/components/Layout.tsx"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "Add pulse and ripple click animations to all primary call-to-action buttons and navigation action buttons across the app (e.g., 'Get Started', 'Generate Content', 'Upgrade', pricing tier buttons).",
+        "summary": "On first login, present the `ProfileSetupModal` to collect the user's name and email and save it to the backend via `useSaveCallerUserProfile`. Subsequent logins should skip the modal if a profile already exists.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/index.css",
-          "frontend/src/hooks/useRippleEffect.ts",
-          "frontend/src/pages/LandingPage.tsx",
-          "frontend/src/pages/PricingPage.tsx",
-          "frontend/src/pages/ContentGenerator.tsx",
-          "frontend/src/components/Layout.tsx"
+          "frontend/src/App.tsx",
+          "frontend/src/hooks/useGetCallerUserProfile.ts"
         ],
         "matchedFiles": [
-          "frontend/src/index.css",
-          "frontend/src/hooks/useRippleEffect.ts",
-          "frontend/src/pages/LandingPage.tsx",
-          "frontend/src/pages/PricingPage.tsx",
-          "frontend/src/pages/ContentGenerator.tsx",
-          "frontend/src/components/Layout.tsx"
+          "frontend/src/App.tsx"
         ]
       },
       {
         "id": "REQ-3",
-        "summary": "Add a bold hero section at the top of the LandingPage with a visually striking banner, a compelling headline, a short subheadline describing the product value, and a prominent call-to-action button linking to the pricing or sign-up flow.",
-        "status": "implemented",
+        "summary": "Ensure the backend actor is initialised with the authenticated Internet Identity principal so that all backend calls (profile fetch, content generation, subscription queries) are made on behalf of the logged-in user. Anonymous actor should be used only when no identity is available.",
+        "status": "missing",
         "plannedFiles": [
-          "frontend/src/components/HeroSection.tsx",
-          "frontend/src/pages/LandingPage.tsx"
+          "frontend/src/hooks/useActor.ts"
         ],
-        "matchedFiles": [
-          "frontend/src/components/HeroSection.tsx",
-          "frontend/src/pages/LandingPage.tsx"
-        ]
+        "matchedFiles": []
       },
       {
         "id": "REQ-4",
-        "summary": "Add a testimonials/reviews section to the LandingPage featuring at least 3 fictional customer quotes with names, roles, and avatar initials to build trust with visitors.",
+        "summary": "After login, redirect users to the Dashboard page where they can view their subscription tier, content request history, and manage their account. The hero section CTA should direct authenticated users to /generate and unauthenticated users to /pricing, as already wired in `HeroSection.tsx`.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/TestimonialsSection.tsx",
-          "frontend/src/pages/LandingPage.tsx"
+          "frontend/src/components/HeroSection.tsx",
+          "frontend/src/pages/Dashboard.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/TestimonialsSection.tsx",
-          "frontend/src/pages/LandingPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-5",
-        "summary": "Add a countdown timer component to the LandingPage that counts down to a promotional deadline (e.g., a limited-time discount offer), creating urgency for visitors to sign up.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/CountdownTimer.tsx",
-          "frontend/src/hooks/useCountdown.ts",
-          "frontend/src/pages/LandingPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/CountdownTimer.tsx",
-          "frontend/src/hooks/useCountdown.ts",
-          "frontend/src/pages/LandingPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-6",
-        "summary": "Add an image carousel/gallery section to the LandingPage that visually showcases the product's features or use cases with auto-advancing slides, manual navigation arrows, and dot indicators.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/FeatureCarousel.tsx",
-          "frontend/src/hooks/useCarousel.ts",
-          "frontend/src/pages/LandingPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/FeatureCarousel.tsx",
-          "frontend/src/hooks/useCarousel.ts",
-          "frontend/src/pages/LandingPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-7",
-        "summary": "Implement smooth scroll navigation on the LandingPage with anchor links in the header/navigation that scroll smoothly to corresponding sections (e.g., Features, How It Works, Pricing, Testimonials) on the same page.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/LandingPage.tsx",
-          "frontend/src/components/LandingPageNav.tsx",
-          "frontend/src/hooks/useScrollSpy.ts",
-          "frontend/src/components/Layout.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/LandingPage.tsx",
-          "frontend/src/components/LandingPageNav.tsx",
-          "frontend/src/hooks/useScrollSpy.ts",
-          "frontend/src/components/Layout.tsx"
+          "frontend/src/pages/Dashboard.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
-    "backend/blob-storage/Mixin.mo",
-    "backend/blob-storage/Storage.mo",
+    "backend/main.mo",
     "build-request.json",
-    "caffeine.lock.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/public/assets/generated/carousel-slide-1.dim_800x400.png, carousel-slide-2.dim_800x400.png, carousel-slide-3.dim_800x400.png",
-    "frontend/public/assets/generated/hero-banner.dim_1200x480.png",
-    "frontend/src/components/CountdownTimer.tsx",
-    "frontend/src/components/FeatureCarousel.tsx",
-    "frontend/src/components/HeroSection.tsx",
-    "frontend/src/components/LandingPageNav.tsx",
+    "frontend/src/App.tsx",
+    "frontend/src/backend.ts",
     "frontend/src/components/Layout.tsx",
-    "frontend/src/components/TestimonialsSection.tsx",
-    "frontend/src/hooks/useCarousel.ts",
-    "frontend/src/hooks/useCountdown.ts",
-    "frontend/src/hooks/useRippleEffect.ts",
-    "frontend/src/hooks/useScrollAnimation.ts",
-    "frontend/src/hooks/useScrollSpy.ts",
-    "frontend/src/index.css",
-    "frontend/src/pages/ContentGenerator.tsx",
-    "frontend/src/pages/LandingPage.tsx",
-    "frontend/src/pages/PricingPage.tsx",
-    "frontend/tailwind.config.js",
+    "frontend/src/components/ProfileSetupModal.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/pages/Dashboard.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

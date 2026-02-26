@@ -109,7 +109,7 @@ export default function Layout({ children }: LayoutProps) {
                 size="sm"
                 className={`btn-ripple transition-all ${!isAuthenticated ? 'shadow-glow hover:shadow-glow-lg font-semibold' : ''}`}
               >
-                {isLoggingIn ? 'Logging in...' : isAuthenticated ? 'Logout' : 'Login'}
+                {isLoggingIn ? 'Signing in...' : isAuthenticated ? 'Sign Out' : 'Sign In'}
               </Button>
             </div>
 
@@ -157,7 +157,7 @@ export default function Layout({ children }: LayoutProps) {
                 size="sm"
                 className={`w-full btn-ripple ${!isAuthenticated ? 'shadow-glow font-semibold' : ''}`}
               >
-                {isLoggingIn ? 'Logging in...' : isAuthenticated ? 'Logout' : 'Login'}
+                {isLoggingIn ? 'Signing in...' : isAuthenticated ? 'Sign Out' : 'Sign In'}
               </Button>
             </div>
           </div>

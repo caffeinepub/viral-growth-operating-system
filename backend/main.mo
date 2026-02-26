@@ -4,12 +4,14 @@ import Runtime "mo:core/Runtime";
 import AccessControl "authorization/access-control";
 import OutCall "http-outcalls/outcall";
 import MixinAuthorization "authorization/MixinAuthorization";
+import MixinStorage "blob-storage/Mixin";
 import Stripe "stripe/stripe";
 import Iter "mo:core/Iter";
 
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
+  include MixinStorage();
 
   public type TierLevel = {
     #free;
@@ -76,11 +78,9 @@ actor {
     allowedCountries = [];
   };
 
-  // Product IDs mapped in backend
   let proProductId = "prod_U1srjJsHibXnGN";
   let eliteProductId = "prod_U1sqrtMwxVMNOs";
 
-  // User Profile Management (required by frontend)
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can access profiles");
@@ -193,7 +193,6 @@ actor {
   };
 
   public shared ({ caller }) func processWebhook(eventType : WebhookEventType, principalText : Text, tier : ?TierLevel, customerId : ?Text) : async () {
-    // CRITICAL: Webhook processing must be admin-only to prevent unauthorized subscription upgrades
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can process webhooks");
     };
@@ -406,4 +405,3 @@ actor {
     "";
   };
 };
-
